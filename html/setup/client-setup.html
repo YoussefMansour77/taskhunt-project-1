@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Profile | TaskHunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/profile-setup.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="setup-topbar">
+  <a href="../../html/home.html" class="logo">Task<span>Hunt</span></a>
+  <a href="../client-home.html" class="skip-btn">Skip for now →</a>
+</div>
+
+<!-- Card -->
+<div class="setup-card">
+
+  <!-- Progress (always full since single step) -->
+  <div class="progress-bar">
+    <div class="progress-fill" style="width:100%"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="card-header">
+    <p class="step-label">Your Profile</p>
+    <h1>Welcome to TaskHunt!</h1>
+    <p>Add a few details so freelancers know who they're working with.</p>
+  </div>
+
+  <!-- Single form -->
+  <div class="single-form">
+
+    <!-- Avatar -->
+    <div class="avatar-upload">
+      <img id="avatarPreview" class="avatar-preview"
+           src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e2eef5'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%230077B8'/%3E%3Cellipse cx='50' cy='80' rx='28' ry='20' fill='%230077B8'/%3E%3C/svg%3E"
+           alt="Profile photo">
+      <div class="avatar-upload-btn">
+        <label for="avatarInput">
+          <i class="fas fa-camera"></i> Upload Photo
+        </label>
+        <input type="file" id="avatarInput" accept="image/*">
+        <span>JPG, PNG, GIF · Auto-compressed</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Display Name *</label>
+      <input type="text" id="display_name" placeholder="e.g. Sara Ahmed" required>
+    </div>
+
+    <div class="form-group">
+      <label>About You</label>
+      <textarea id="description" placeholder="Tell freelancers a bit about yourself, your company, or what kind of projects you need help with..."></textarea>
+    </div>
+
+    <p class="msg error" id="errorMsg"></p>
+    <p class="msg success" id="successMsg"></p>
+
+    <div class="step-nav" style="justify-content:flex-end; border-top:none; padding-top:0; margin-top:8px;">
+      <button class="btn-submit" id="submitBtn" onclick="submitProfile()">
+        <i class="fas fa-check"></i> Save & Continue
+      </button>
+    </div>
+  </div>
+
+</div><!-- /setup-card -->
+
+<script src="../../assets/js/api.js"></script>
+<script>
+// ── Auth guard ────────────────────────────────────────────────────
+if (!Auth.isLoggedIn()) window.location.href = '../login.html';
+const me = Auth.user();
+if (me && me.role !== 'client') window.location.href = '../freelancers-home.html';
+
+// Pre-fill name from auth
+window.addEventListener('DOMContentLoaded', () => {
+  if (me && me.name) document.getElementById('display_name').value = me.name;
+});
+
+// ── Avatar: resize to 150×150 → base64 (no file storage needed) ──
+let avatarBase64 = null;
+
+document.getElementById('avatarInput').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 150;
+      const ctx = canvas.getContext('2d');
+      // Cover-crop to square
+      const size = Math.min(img.width, img.height);
+      const sx   = (img.width  - size) / 2;
+      const sy   = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 150, 150);
+      avatarBase64 = canvas.toDataURL('image/jpeg', 0.75);
+      document.getElementById('avatarPreview').src = avatarBase64;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── Submit ───────────────────────────────────────────────────────
+async function submitProfile() {
+  const btn = document.getElementById('submitBtn');
+  const err = document.getElementById('errorMsg');
+  const suc = document.getElementById('successMsg');
+  err.style.display = 'none';
+  suc.style.display = 'none';
+
+  const name = document.getElementById('display_name').value.trim();
+  if (!name) { err.textContent = 'Please enter your display name.'; err.style.display = 'block'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+  try {
+    const res = await fetch('/api/profiles/client', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + Auth.token()
+      },
+      body: JSON.stringify({
+        display_name: name,
+        description:  document.getElementById('description').value.trim(),
+        avatar:       avatarBase64
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to save profile');
+
+    suc.textContent = 'Profile saved! Redirecting...';
+    suc.style.display = 'block';
+    setTimeout(() => window.location.href = '../client-home.html', 1500);
+  } catch (e) {
+    err.textContent = e.message;
+    err.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Save & Continue';
+  }
+}
+</script>
+</body>
+</html>

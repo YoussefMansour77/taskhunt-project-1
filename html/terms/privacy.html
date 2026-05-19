@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms & Conditions</title>
+  <link rel="stylesheet" href="terms.css">
+</head>
+
+<style>
+
+:root {
+  --c1: #00A8FF;
+  --c2: #0090E0;
+  --c3: #0077B8;
+  --c4: #051923;
+  --white: #ffffff;
+  --light: #e6f7ff; 
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #ffffff;
+  color: #051923;
+}
+
+.terms-header {
+  width: 100%;
+  background: #ffffff;
+  padding: 20px 30px;
+  border-bottom: 1px solid #eee;
+}
+
+.terms-header img {
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+  margin-left: 20px;
+}
+
+.terms-page {
+  display: flex;
+  max-width: 1100px;
+  margin: 60px auto;
+  gap: 10px;
+  padding: 0 16px;
+  align-items: flex-start;
+}
+
+.terms-sidebar {
+  width: 200px;
+  position: relative;
+  left: -40px;
+  top: -20px;
+  margin-right: auto;
+}
+
+.terms-sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.terms-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.terms-sidebar li {
+  margin-bottom: 8px;
+}
+
+.terms-sidebar a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13;
+  color: var(--c4);
+  transition: color 0.3s;
+  text-decoration: none;
+}
+
+.terms-sidebar a:hover {
+  color: var(--c2);
+  background: none;
+}
+
+.terms-sidebar a.active {
+  color: var(--c4);
+  font-size: 13px;
+  border-left: 4px solid var(--c2);
+}
+
+.terms-content {
+  flex: 1;
+  max-width: none;
+  margin: 0;
+  padding: 0 20px;
+  text-align: left;
+}
+
+.terms-block {
+  height: 440px;
+  background: #ffffff;
+  padding: 15px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.title-with-button {
+  display: flex;
+}
+
+.title-with-button h1 {
+  margin-top: 8px;
+}
+
+#download-btn {
+  width: 120px;
+  height: 40px;
+  padding:10px;
+  font-size: 15px;
+  margin-left: 460px;
+  background-color:#005b84;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.terms-block.last-update {
+font-size: 12px;
+opacity: 0.6;
+margin-bottom: 30px;
+text-align: inherit;
+}
+
+.terms-block p {
+  line-height: 1.7;
+  text-align: inherit;
+}
+</style>
+
+<body>
+
+  <header class="terms-header">
+<div class="logo">
+      <img src="logo.png" alt="Logo">
+  </div>
+</header>
+
+  <div class="terms-page">
+
+    <aside class="terms-sidebar">
+      <h2>Terms</h2>
+      <ul>
+        <li><a href="terms.html">Termes of Service</a></li>
+        <li><a href="privacy.html" class="active">Privacy Policy</a></li>
+        <li><a href="user-agreement.html">User Agreement</a></li>
+        <li><a href="terms-of-use.html">Terms of Use</a></li>
+        <li><a href="anyhire-terms.html">Any Hire Terms</a></li>
+      </ul>
+    </aside>
+<!--Maimn content block-->
+     <main class="terms-content">
+      <section class="terms-block">
+
+       <div class="title-with-button">
+       <h1>Privacy Policy</h1>
+       <button id="download-btn">Download</button>
+      </div>
+       <div class="last-update"><small>last-update:February 2026</small></div>
+       <hr>
+        <p>TaskHunt is committed to protecting your personal data and transparency regarding how we collect it. We collect information such as your name, contact details, payment information, and professional history to provide our recruitment services. Your data is used to match candidates with employers, process payments, and improve the overall user experience on the site. We do not sell your personal information to third parties; however, we may share it with service providers who help us operate our business. Users have the right to request access to their data, ask for corrections, or delete their accounts at any time. We use industry-standard security measures, including encryption, to protect your sensitive information from unauthorized access.</p>
+      </section>
+     </main>
+
+  </div>
+
+  <script>
+  const links = document.querySelectorAll('.terms-sidebar a');
+  const sections = document.querySelectorAll('.terms-content section');
+
+  window.addEventListener('scroll', () => {
+    let current = "";
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100;
+      if (scrollY >= sectionTop) {
+        current = section.getAttribute("id");
+      }
+    });
+
+    links.forEach(link => {
+      link.classList.remove("active");
+      if (link.getAttribute("href") === "#" + current) {
+        link.classList.add("active");
+      }
+    });
+  });
+
+const downloadBtn = document.getElementById("download-btn");
+
+downloadBtn.addEventListener("mousedown", () => {
+  downloadBtn.style.backgroundColor = "#0077B8"; 
+  downloadBtn.style.transform = "scale(0.95)";  
+});
+
+downloadBtn.addEventListener("mouseup", () => {
+  downloadBtn.style.backgroundColor = "var(--c2)"; 
+  downloadBtn.style.transform = "scaleX(1)";      
+});
+
+downloadBtn.addEventListener("mouseleave", () => {
+  downloadBtn.style.backgroundColor = "var(--c2)";
+  downloadBtn.style.transform = "scaleX(1)";
+});
+  </script>
+
+</body>
+
+</html>

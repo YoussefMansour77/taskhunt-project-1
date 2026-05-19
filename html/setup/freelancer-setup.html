@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Profile | TaskHunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/profile-setup.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="setup-topbar">
+  <a href="../../html/home.html" class="logo">Task<span>Hunt</span></a>
+  <a href="../freelancers-home.html" class="skip-btn">Skip for now →</a>
+</div>
+
+<!-- Card -->
+<div class="setup-card">
+
+  <!-- Progress -->
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:33%"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="card-header">
+    <p class="step-label" id="stepLabel">Step 1 of 3</p>
+    <h1 id="stepTitle">Basic Information</h1>
+    <p id="stepDesc">Let's start with your photo and core details so clients can find you.</p>
+  </div>
+
+  <!-- ── Step 1: Basic Info ── -->
+  <div class="step active" id="step1">
+
+    <!-- Avatar -->
+    <div class="avatar-upload">
+      <img src="../../assets/images/default-avatar.png" id="avatarPreview" class="avatar-preview"
+           onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23e2eef5\'/%3E%3Ccircle cx=\'50\' cy=\'38\' r=\'18\' fill=\'%230077B8\'/%3E%3Cellipse cx=\'50\' cy=\'80\' rx=\'28\' ry=\'20\' fill=\'%230077B8\'/%3E%3C/svg%3E'">
+      <div class="avatar-upload-btn">
+        <label for="avatarInput">
+          <i class="fas fa-camera"></i> Upload Photo
+        </label>
+        <input type="file" id="avatarInput" accept="image/*">
+        <span>JPG, PNG, GIF · Auto-compressed</span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Display Name *</label>
+        <input type="text" id="display_name" placeholder="e.g. Ahmed Mostafa" required>
+      </div>
+      <div class="form-group">
+        <label>Professional Title *</label>
+        <input type="text" id="title" placeholder="e.g. Full Stack Developer">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Country *</label>
+        <select id="country">
+          <option value="" disabled selected>Select country</option>
+          <option>Egypt</option>
+          <option>Saudi Arabia</option>
+          <option>UAE</option>
+          <option>Jordan</option>
+          <option>Kuwait</option>
+          <option>Qatar</option>
+          <option>Bahrain</option>
+          <option>Oman</option>
+          <option>Morocco</option>
+          <option>Tunisia</option>
+          <option>Libya</option>
+          <option>Algeria</option>
+          <option>Sudan</option>
+          <option>Iraq</option>
+          <option>Lebanon</option>
+          <option>Syria</option>
+          <option>Palestine</option>
+          <option>Yemen</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>City</label>
+        <input type="text" id="city" placeholder="e.g. Cairo">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" id="phone" placeholder="+20 100 000 0000">
+    </div>
+
+    <div class="step-nav">
+      <div class="step-dots">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+      </div>
+      <button class="btn-next" onclick="goStep(2)">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 2: Professional Details ── -->
+  <div class="step" id="step2">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="category" onchange="updateSubCategories()">
+          <option value="" disabled selected>Select category</option>
+          <option>Data & AI</option>
+          <option>Development & IT</option>
+          <option>Design & Creative</option>
+          <option>Sales & Marketing</option>
+          <option>Writing & Translation</option>
+          <option>Admin & Support</option>
+          <option>Finance & Accounting</option>
+          <option>Legal</option>
+          <option>HR & Training</option>
+          <option>Engineering & Architecture</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Sub-category</label>
+        <select id="sub_category">
+          <option value="" disabled selected>Select sub-category</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Experience Level *</label>
+      <div class="exp-group">
+        <div class="exp-btn" onclick="selectExp('beginner', this)">
+          <div class="exp-icon">🌱</div>
+          <div class="exp-name">Beginner</div>
+          <div class="exp-desc">0 – 2 years</div>
+        </div>
+        <div class="exp-btn" onclick="selectExp('intermediate', this)">
+          <div class="exp-icon">⚡</div>
+          <div class="exp-name">Intermediate</div>
+          <div class="exp-desc">2 – 5 years</div>
+        </div>
+        <div class="exp-btn" onclick="selectExp('expert', this)">
+          <div class="exp-icon">🏆</div>
+          <div class="exp-name">Expert</div>
+          <div class="exp-desc">5+ years</div>
+        </div>
+      </div>
+      <input type="hidden" id="experience_level">
+    </div>
+
+    <div class="form-group">
+      <label>Hourly Rate (USD)</label>
+      <input type="number" id="hourly_rate" placeholder="e.g. 25" min="1" max="999">
+      <p class="hint">This is your base rate. You can negotiate per project.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Skills *</label>
+      <div class="skills-input-wrap" id="skillsWrap" onclick="document.getElementById('skillInput').focus()">
+        <input type="text" id="skillInput" placeholder="Type a skill and press Enter...">
+      </div>
+      <p class="hint">e.g. JavaScript, React, Node.js — press Enter or comma to add</p>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(1)">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <div class="step-dots">
+        <div class="step-dot done" id="dot1b"></div>
+        <div class="step-dot active" id="dot2b"></div>
+        <div class="step-dot" id="dot3b"></div>
+      </div>
+      <button class="btn-next" onclick="goStep(3)">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 3: About & Links ── -->
+  <div class="step" id="step3">
+
+    <div class="form-group">
+      <label>About You *</label>
+      <textarea id="bio" placeholder="Tell clients about your experience, what you do, and what makes you unique..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Education</label>
+      <input type="text" id="education" placeholder="e.g. B.Sc. Computer Science – Cairo University">
+    </div>
+
+    <div class="form-group">
+      <label>Languages</label>
+      <div class="skills-input-wrap" id="langsWrap" onclick="document.getElementById('langInput').focus()">
+        <input type="text" id="langInput" placeholder="Type a language and press Enter...">
+      </div>
+      <p class="hint">e.g. Arabic, English, French</p>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Portfolio URL</label>
+        <input type="url" id="portfolio_url" placeholder="https://myportfolio.com">
+      </div>
+      <div class="form-group">
+        <label>GitHub</label>
+        <input type="url" id="github_url" placeholder="https://github.com/username">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>LinkedIn</label>
+      <input type="url" id="linkedin_url" placeholder="https://linkedin.com/in/username">
+    </div>
+
+    <p class="msg error" id="errorMsg"></p>
+    <p class="msg success" id="successMsg"></p>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(2)">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <div class="step-dots">
+        <div class="step-dot done" id="dot1c"></div>
+        <div class="step-dot done" id="dot2c"></div>
+        <div class="step-dot active" id="dot3c"></div>
+      </div>
+      <button class="btn-submit" id="submitBtn" onclick="submitProfile()">
+        <i class="fas fa-check"></i> Save Profile
+      </button>
+    </div>
+  </div>
+
+</div><!-- /setup-card -->
+
+<script src="../../assets/js/api.js"></script>
+<script>
+// ── Auth guard ────────────────────────────────────────────────────
+if (!Auth.isLoggedIn()) window.location.href = '../login.html';
+const me = Auth.user();
+if (me && me.role !== 'freelancer') window.location.href = '../client-home.html';
+
+// ── State ────────────────────────────────────────────────────────
+let skillsList   = [];
+let langsList    = [];
+let avatarBase64 = null;
+let currentStep  = 1;
+
+// ── Avatar: resize to 150×150 → base64 (no file storage needed) ──
+document.getElementById('avatarInput').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 150;
+      const ctx  = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const sx   = (img.width  - size) / 2;
+      const sy   = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 150, 150);
+      avatarBase64 = canvas.toDataURL('image/jpeg', 0.75);
+      document.getElementById('avatarPreview').src = avatarBase64;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── Sub-categories map ───────────────────────────────────────────
+const subCats = {
+  'Data & AI':                ['Data Analysis & Visualization','Machine Learning Models','Deep Learning','Data Engineering','Predictive Analytics','Generative AI'],
+  'Development & IT':         ['Web Development','Mobile Development','Backend Development','DevOps & Cloud','Cybersecurity','Database Administration'],
+  'Design & Creative':        ['Logo & Brand Identity','UI/UX Design','Illustration','Video Editing','Motion Graphics','Photography'],
+  'Sales & Marketing':        ['SEO & SEM','Social Media Marketing','Email Marketing','Content Marketing','PPC Advertising','Market Research'],
+  'Writing & Translation':    ['Content Writing','Copywriting','Technical Writing','Translation','Proofreading','Ghostwriting'],
+  'Admin & Support':          ['Virtual Assistant','Data Entry','Customer Support','Project Management','Research','Scheduling'],
+  'Finance & Accounting':     ['Bookkeeping','Financial Analysis','Tax Preparation','Payroll','Budgeting','Auditing'],
+  'Legal':                    ['Contract Review','Legal Research','Intellectual Property','Business Formation','Compliance','Paralegal Services'],
+  'HR & Training':            ['Recruitment','Training & Development','HR Consulting','Performance Management','Employee Relations','Compensation & Benefits'],
+  'Engineering & Architecture':['Civil Engineering','Mechanical Engineering','Electrical Engineering','Architectural Design','3D Modeling','CAD Drafting']
+};
+
+function updateSubCategories() {
+  const cat = document.getElementById('category').value;
+  const sel = document.getElementById('sub_category');
+  sel.innerHTML = '<option value="" disabled selected>Select sub-category</option>';
+  (subCats[cat] || []).forEach(s => {
+    const o = document.createElement('option');
+    o.value = o.textContent = s;
+    sel.appendChild(o);
+  });
+}
+
+// ── Experience level ─────────────────────────────────────────────
+function selectExp(val, el) {
+  document.querySelectorAll('.exp-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('experience_level').value = val;
+}
+
+// ── Skills tags ──────────────────────────────────────────────────
+function addTag(list, wrap, value) {
+  value = value.trim().replace(/,/g, '');
+  if (!value || list.includes(value)) return;
+  list.push(value);
+  renderTags(list, wrap);
+}
+
+function renderTags(list, wrap) {
+  const input = wrap.querySelector('input');
+  wrap.querySelectorAll('.skill-tag').forEach(t => t.remove());
+  list.forEach((tag, i) => {
+    const el = document.createElement('span');
+    el.className = 'skill-tag';
+    el.innerHTML = `${tag}<button type="button" onclick="removeTag(${i}, '${wrap.id}')">×</button>`;
+    wrap.insertBefore(el, input);
+  });
+  input.value = '';
+}
+
+function removeTag(idx, wrapId) {
+  if (wrapId === 'skillsWrap') { skillsList.splice(idx, 1); renderTags(skillsList, document.getElementById('skillsWrap')); }
+  else                         { langsList.splice(idx, 1);  renderTags(langsList,  document.getElementById('langsWrap'));  }
+}
+
+document.getElementById('skillInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    addTag(skillsList, document.getElementById('skillsWrap'), this.value);
+  }
+});
+document.getElementById('langInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    addTag(langsList, document.getElementById('langsWrap'), this.value);
+  }
+});
+
+// ── Step navigation ──────────────────────────────────────────────
+const stepTitles = ['Basic Information', 'Professional Details', 'About & Links'];
+const stepDescs  = [
+  'Start with your photo and core details so clients can find you.',
+  'Tell us about your expertise, rates, and skills.',
+  'Write your bio and add links to your portfolio.'
+];
+const progressPct = ['33%', '66%', '100%'];
+
+function goStep(n) {
+  if (n === 2 && !validateStep1()) return;
+  if (n === 3 && !validateStep2()) return;
+  currentStep = n;
+  document.querySelectorAll('.step').forEach((s, i) => s.classList.toggle('active', i + 1 === n));
+  document.getElementById('stepLabel').textContent = `Step ${n} of 3`;
+  document.getElementById('stepTitle').textContent = stepTitles[n - 1];
+  document.getElementById('stepDesc').textContent  = stepDescs[n - 1];
+  document.getElementById('progressFill').style.width = progressPct[n - 1];
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep1() {
+  const name = document.getElementById('display_name').value.trim();
+  if (!name) { alert('Please enter your display name.'); return false; }
+  return true;
+}
+function validateStep2() {
+  if (!document.getElementById('experience_level').value) {
+    alert('Please select your experience level.'); return false;
+  }
+  return true;
+}
+
+// ── Submit ───────────────────────────────────────────────────────
+async function submitProfile() {
+  const btn = document.getElementById('submitBtn');
+  const err = document.getElementById('errorMsg');
+  const suc = document.getElementById('successMsg');
+  err.style.display = 'none';
+  suc.style.display = 'none';
+
+  const bio = document.getElementById('bio').value.trim();
+  if (!bio) { err.textContent = 'Please write something in your bio.'; err.style.display = 'block'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+  try {
+    const res = await fetch('/api/profiles/freelancer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + Auth.token()
+      },
+      body: JSON.stringify({
+        avatar:           avatarBase64,
+        display_name:     document.getElementById('display_name').value.trim(),
+        title:            document.getElementById('title').value.trim(),
+        country:          document.getElementById('country').value,
+        city:             document.getElementById('city').value.trim(),
+        phone:            document.getElementById('phone').value.trim(),
+        category:         document.getElementById('category').value,
+        sub_category:     document.getElementById('sub_category').value,
+        experience_level: document.getElementById('experience_level').value,
+        hourly_rate:      document.getElementById('hourly_rate').value,
+        skills:           JSON.stringify(skillsList),
+        bio,
+        education:        document.getElementById('education').value.trim(),
+        languages:        JSON.stringify(langsList),
+        portfolio_url:    document.getElementById('portfolio_url').value.trim(),
+        github_url:       document.getElementById('github_url').value.trim(),
+        linkedin_url:     document.getElementById('linkedin_url').value.trim()
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to save profile');
+
+    suc.textContent = 'Profile saved! Redirecting...';
+    suc.style.display = 'block';
+    setTimeout(() => window.location.href = '../freelancers-home.html', 1500);
+  } catch (e) {
+    err.textContent = e.message;
+    err.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Save Profile';
+  }
+}
+</script>
+</body>
+</html>

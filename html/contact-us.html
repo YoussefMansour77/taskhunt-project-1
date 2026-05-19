@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width,initial-scale=1.0">
+    <title> Contact </title>
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap.css" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/contact-us.css">
+    <!-- أيقونات بوتاستراب -->
+    <link rel="stylesheet" href="css/all.min.css">
+   
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="logo">
+      <a href="home.html" class="logo">
+      <img src="images/logo.png" alt="Logo"></a>
+    </div>
+    <ul>
+      <li><a href="#">Find Work</a></li>
+      <li><a href="#">Hire Talent</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact-us.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li>
+        <button class="btn primary" onclick="window.location.href='signup/ask-signup.html'">Sign Up</button>
+      </li>
+    </ul>
+  </nav>
+      <!-- نموذج التواصل -->
+       <div class="parent">
+       <div class="contact-box">
+       <form id="contactForm">
+       <div class="mb-3">
+       <h2>Drop us a massage</h2>
+       <h5>We'd Love to hear from you!</h5>
+       <label class="form-label">Name</label>
+       <input type="text" class="form-control" placeholder=" Enter your Name " required>
+       </div>
+          <div class="mb-3">
+           <label class="form-label">Email</label>
+           <input type="email" class="form-control" placeholder=" Enter your Email " required>
+           </div>
+            <div class="mb-3">
+             <label class="form-label">Phone Number</label>
+             <input type="text" class="form-control" placeholder=" Enter your Phone Number "required>
+            </div>
+             <div class="mb-3">
+              <label class="form-label">Message</label>
+              <textarea class="form-control" rows="4" placeholder=" Enter your Message  "required></textarea>
+             </div>
+              <button type="submit" class="btn btn-primary">Send</button>
+              </form>
+         </div>
+       </div>
+
+    <!-- ملف الجافا سكربت -->
+    <script src="bootstrap.js"></script>
+
+    <!-- نافذة الرسالة -->
+    <div id="popupMessage">
+
+        your massage has been sent successfully ✅ and will be answered within 24 our.
+    </div>
+
+    <!-- قسم التواصل -->
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="contact-buttons"></div>
+            
+            <div class="contact-info">
+                <div class="tagline">Contact Now</div>
+
+                <div class="contact-item">
+                <i class="fas fa-phone" style="color: darkblue;"></i>
+                <div class="phone-container">
+                <span class="phone">+20 12345-65412</span>
+                </div>
+                </div>
+
+                <div class="contact-item">
+                <i class="fas fa-envelope" style="color: darkblue;"></i>
+                <div class="email-container">
+                <span class="email">taskhunt@gmail.com</span>
+                </div>
+                </div> 
+
+                <div class="contact-item">
+                <i class="fas fa-map-mark-alt" style="color: darkblue;"></i>
+                <div class="address-container">
+                <span class="address">1993 hunter, Bani suef, Egypt</span>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-col">
+            <h3>Task Hunt</h3>
+            <ul>
+                <li><a href="#">About Task Hunt</a></li>
+                <li><a href="#">How It Works</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Rights Protection</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Discussions</a></li>
+                <li><a href="#">Topics</a></li>
+                <li><a href="#">User Experiences</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="icon" alt="Facebook">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="icon" alt="Instagram">
+                <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="icon" alt="TikTok">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="icon" alt="Twitter">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 Task Hunt — All rights reserved</p>
+    </div>
+</footer>
+
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="bootstrap.bundle.min.js"></script>
+
+
+    <script>$("#contactForm").submit(function (e) {
+            e.preventDefault();
+
+            $("#popupMessage")
+                .fadeIn(500)
+                .delay(500)
+                .fadeOut(500);
+
+            $(this).trigger("reset");
+        });</script>
+
+
+</body>
+
+</html>

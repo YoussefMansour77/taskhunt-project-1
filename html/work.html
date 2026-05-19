@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Find Work - TaskHunt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0077b8;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --primary-blue: #4A90E2;
+            --dark-blue: #2C3E50;
+            --light-bg: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            padding: 0 5%;
+            /* عشان ميبقاش لازق في الجوانب */
+            background: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+            /* أمان إضافي */
+            box-sizing: border-box;
+            overflow: hidden;
+            /* يمنع أي حاجة بداخل الناف بار إنها تمطه */
+        }
+
+        .logo {
+            height: 100%;
+            /* خلي حاوية اللوجو تاخد طول الناف بار */
+            display: flex;
+            align-items: center;
+            /* سنتر اللوجو عمودياً */
+        }
+
+        .logo a {
+            display: flex;
+            /* يمنع وجود مسافات غريبة تحت اللينك */
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo img {
+            height: 42px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links li a:hover {
+            color: #007bff;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+
+        .login {
+            background: #f0f6ff;
+            color: #0077B8;
+        }
+
+        .login:hover {
+            background: #e0edff;
+        }
+
+        .signup {
+            background: #0077B8;
+            color: white;
+        }
+
+        .signup:hover {
+            background: #0077B8;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .mobile-auth {
+            display: none;
+        }
+
+        /* HERO SECTION */
+        .hero-section {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 35px;
+            padding: 10px 24px 40px;
+        }
+
+        .hero-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 40px 54px;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.06);
+            max-width: 1400px;
+            width: 100%;
+            gap: 48px;
+        }
+
+        .hero-left {
+            flex: 1.4;
+            text-align: left;
+        }
+
+        .hero-content h1 {
+            font-size: 3.2rem;
+            color: var(--dark-blue);
+            margin-bottom: 18px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .hero-content h1 span {
+            color: var(--primary-blue);
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: #5a6874;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .search-box-container {
+            max-width: 520px;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            background: #ffffff;
+            padding: 5px;
+            border-radius: 80px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .search-input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 14px 24px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .search-btn:hover {
+            background: #051923;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .action-btn.blue {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .action-btn.outline {
+            background: #f0f6ff;
+            color: var(--dark-blue);
+            border: 1px solid #dce5f2;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 540px;
+            height: auto;
+        }
+
+        /* FILTER BAR */
+        .filter-bar {
+            padding: 20px 20px 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .filter-container {
+            background: #fff;
+            padding: 16px 28px;
+            border-radius: 60px;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
+        }
+
+        .filter-container select {
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: 1px solid #d1d9e8;
+            background: white;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* LAYOUT */
+        .page-layout {
+            display: flex;
+            gap: 32px;
+            max-width: 1280px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            padding: 24px 16px;
+            border-radius: 28px;
+            border: 1px solid #eef2f8;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .category {
+            margin-bottom: 12px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .category-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 12px 8px;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+
+        .category-btn:hover {
+            color: var(--primary);
+        }
+
+        .sub-categories {
+            list-style: none;
+            padding-left: 20px;
+            margin: 6px 0 12px;
+            display: none;
+        }
+
+        .category.active .sub-categories {
+            display: block;
+        }
+
+        .sub-categories li a {
+            text-decoration: none;
+            color: #5b6e8c;
+            font-size: 13px;
+            display: block;
+            padding: 6px 0;
+            transition: 0.2s;
+        }
+
+        .sub-categories li a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .arrow {
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+
+        .category.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        /* MAIN CONTENT - JOB CARDS */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .up-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: #fff;
+            border-radius: 24px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            transition: all 0.25s;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .up-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .card-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-main h3 {
+            margin: 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f3b6f;
+            cursor: pointer;
+        }
+
+        .card-main h3:hover {
+            color: var(--primary);
+        }
+
+        .client-info {
+            font-size: 0.85rem;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #4A90E2;
+            color: white;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .verified::before {
+            content: "✓";
+        }
+
+        .job-desc {
+            font-size: 0.95rem;
+            color: #4b5563;
+            line-height: 1.5;
+            margin: 6px 0;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 8px 0;
+        }
+
+        .tags span {
+            background: #f3f4f6;
+            color: #4b5563;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: #6c86a3;
+            margin-top: 4px;
+        }
+
+        .card-side {
+            text-align: right;
+            min-width: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 18px;
+        }
+
+        .budget {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.3;
+        }
+
+        .budget span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        .apply-btn {
+            padding: 10px 26px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .apply-btn:hover {
+            background: #005f97;
+            transform: scale(0.96);
+        }
+
+        .view-more {
+            display: block;
+            margin: 32px auto 20px;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            width: fit-content;
+        }
+
+        /* CTA FIXED */
+        .cta-fixed {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            padding: 12px 32px;
+            border-radius: 80px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            z-index: 1000;
+            border: 1px solid var(--primary);
+            backdrop-filter: blur(2px);
+        }
+
+        .cta-fixed p {
+            margin: 0;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .cta-fixed button {
+            background: var(--primary);
+            border: none;
+            padding: 8px 22px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .cta-fixed.cta-stop {
+            position: absolute;
+            bottom: 20px;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #051923;
+            padding: 48px 32px 24px;
+            font-family: "Inter", sans-serif;
+            color: #ffffff;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a {
+            text-decoration: none;
+            color: #adb5bd;
+            transition: 0.2s;
+        }
+
+        .footer-col ul li a:hover {
+            color: white;
+            padding-left: 4px;
+        }
+
+        .footer-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: #fff;
+            margin-bottom: 14px;
+            outline: none;
+        }
+
+        .footer-btn {
+            width: 100%;
+            padding: 12px;
+            background: #00a8e8;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 28px;
+            height: 28px;
+            filter: brightness(0) invert(1);
+            opacity: 0.7;
+            transition: 0.2s;
+        }
+
+        .social-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: #8e9aaf;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero-wrapper {
+                padding: 32px 32px;
+                gap: 30px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.4rem;
+            }
+
+            .page-layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+                gap: 20px;
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .mobile-auth {
+                display: flex;
+                gap: 12px;
+                margin-top: 10px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero-wrapper {
+                flex-direction: column;
+                text-align: center;
+                padding: 32px 20px;
+            }
+
+            .hero-left {
+                text-align: center;
+                order: 2;
+            }
+
+            .hero-image {
+                order: 1;
+                margin-bottom: 20px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .up-card {
+                flex-direction: column;
+                text-align: left;
+                gap: 20px;
+            }
+
+            .card-side {
+                text-align: left;
+                align-items: flex-start;
+                width: 100%;
+                border-top: 1px solid #eef2f8;
+                padding-top: 18px;
+            }
+
+            .filter-container {
+                border-radius: 32px;
+                padding: 16px 20px;
+                gap: 12px;
+            }
+
+            .cta-fixed {
+                padding: 8px 20px;
+                gap: 12px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.9rem;
+            }
+
+            .search-input-wrapper {
+                flex-direction: column;
+                background: white;
+                border-radius: 32px;
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .search-btn {
+                border-radius: 40px;
+                width: 100%;
+            }
+
+            .cta-fixed {
+                width: 90%;
+                justify-content: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                white-space: normal;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <!-- LOGO -->
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../assets/images/logo.png" alt="TaskHunt Logo">
+            </a>
+        </div>
+
+        <!-- LINKS -->
+        <ul class="nav-links" id="navLinks">
+            <li><a href="work.html">Find Work</a></li>
+            <li><a href="hie-talent.html">Hire Talent</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+
+            <!-- MOBILE BUTTONS -->
+            <li class="mobile-auth">
+                <button onclick="location.href='../../login/login.html'" class="btn login">Login</button>
+                <button onclick="location.href='../../signup/asksignup.html'" class="btn signup">Sign Up</button>
+            </li>
+        </ul>
+
+        <!-- DESKTOP BUTTONS -->
+        <div class="auth-buttons">
+            <button id="nav-login" onclick="location.href='login.html'" class="btn login">Login</button>
+            <button id="nav-signup" onclick="location.href='signup/ask-signup.html'" class="btn signup">Sign Up</button>
+            <div id="nav-user" style="display:none;align-items:center;gap:14px;">
+                <!-- Bell -->
+                <div style="position:relative;cursor:pointer;" onclick="window.location.href='dashboard/freelancer.html'">
+                  <i class="fa-solid fa-bell" style="font-size:20px;color:#555;"></i>
+                  <span id="notifCount" style="display:none;position:absolute;top:-5px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;padding:0 4px;align-items:center;justify-content:center;"></span>
+                </div>
+                <!-- Messages -->
+                <div id="msgIconWrap" style="position:relative;cursor:pointer;" onclick="toggleMsgDropdown(event)">
+                  <i class="fa-solid fa-comment-dots" style="font-size:20px;color:#555;"></i>
+                  <span id="msgCount" style="display:none;position:absolute;top:-5px;right:-6px;background:#22c55e;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;padding:0 4px;align-items:center;justify-content:center;"></span>
+                  <div id="msgDropdown" style="display:none;position:absolute;top:40px;right:-10px;width:300px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;border:1px solid #eee;overflow:hidden;">
+                    <div style="padding:12px 16px;font-weight:700;font-size:14px;border-bottom:1px solid #eee;color:#051923;">Messages</div>
+                    <div id="msgDropList" style="max-height:280px;overflow-y:auto;"></div>
+                    <a href="chat.html" style="display:block;text-align:center;padding:11px;color:#0077B8;font-size:13px;font-weight:600;border-top:1px solid #eee;text-decoration:none;">See All Messages →</a>
+                  </div>
+                </div>
+                <span id="nav-username" style="font-weight:600;color:#0077B8;"></span>
+                <button class="btn login" onclick="Auth.logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- MENU ICON -->
+        <div class="menu-toggle" id="menuToggle">☰</div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="hero-wrapper">
+            <div class="hero-left">
+                <div class="hero-content">
+                    <h1>Find The <span>Perfect Job</span><br>For Your Skills</h1>
+                    <p>Browse thousands of projects and start earning on your own terms.</p>
+                </div>
+                <div class="search-box-container">
+                    <div class="search-input-wrapper">
+                        <input type="text" id="searchKeyword"
+                            placeholder="Search for projects, companies, or keywords...">
+                        <button class="search-btn" id="searchBtn">Search</button>
+                    </div>
+                    <div class="hero-buttons">
+                        <button class="action-btn blue" id="findProjectBtn">Find a Project</button>
+                        <a href="signup/ask-signup.html"><button class="action-btn outline" id="createProfileBtn">Create Profile</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="../assets/images/hero-illustration.png" alt="Hero Illustration"
+                    onerror="this.src='https://placehold.co/500x400?text=Find+Work'">
+            </div>
+        </div>
+    </section>
+
+    <div class="filter-bar">
+        <div class="filter-container">
+            <select id="typeFilter">
+                <option value="all">All Categories</option>
+                <option value="Data & AI">Data & AI</option>
+                <option value="Development & IT">Development & IT</option>
+                <option value="Design & Creative">Design & Creative</option>
+                <option value="Sales & Marketing">Sales & Marketing</option>
+                <option value="Writing & Translation">Writing & Translation</option>
+                <option value="Admin & Support">Admin & Support</option>
+                <option value="Finance & Accounting">Finance & Accounting</option>
+                <option value="Legal">Legal</option>
+                <option value="HR & Training">HR & Training</option>
+            </select>
+            <select id="priceFilter">
+                <option value="all">All Prices</option>
+                <option value="0-500">Under $500</option>
+                <option value="500-1000">$500 - $1000</option>
+                <option value="1000-9999">$1000+</option>
+            </select>
+            <select id="expFilter">
+                <option value="all">All Experience</option>
+                <option value="0-3">Junior (0-3 yrs)</option>
+                <option value="4-7">Mid (4-7 yrs)</option>
+                <option value="8-100">Expert (8+ yrs)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="page-layout">
+        <aside class="sidebar">
+            <div class="category"><button class="category-btn">Data & AI <span class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Data Analysis & Visualization">Data Analysis & Visualization</a></li>
+                    <li><a href="#" data-subtype="Machine Learning Models">Machine Learning Models</a></li>
+                    <li><a href="#" data-subtype="Deep Learning">Deep Learning</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">Development & IT <span class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Full Stack Engineers">Full Stack Engineers</a></li>
+                    <li><a href="#" data-subtype="Backend Developers">Backend Developers</a></li>
+                    <li><a href="#" data-subtype="DevOps Engineers">DevOps Engineers</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">Design & Creative <span class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Graphic Designers">Graphic Designers</a></li>
+                    <li><a href="#" data-subtype="UX Designers">UX Designers</a></li>
+                    <li><a href="#" data-subtype="Web Designers">Web Designers</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">Sales & Marketing <span class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Digital Marketers">Digital Marketers</a></li>
+                    <li><a href="#" data-subtype="Facebook Ads Specialists">Facebook Ads Specialists</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">Writing & Translation <span
+                        class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Creative Writers">Creative Writers</a></li>
+                    <li><a href="#" data-subtype="Copy Editors">Copy Editors</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">Admin & Support <span class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Personal Assistants">Personal Assistants</a></li>
+                    <li><a href="#" data-subtype="Microsoft Excel Experts">Excel Experts</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">Finance & Accounting <span
+                        class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Financial Analysts">Financial Analysts</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">Legal <span class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Legal Advisors">Legal Advisors</a></li>
+                </ul>
+            </div>
+            <div class="category"><button class="category-btn">HR & Training <span class="arrow">›</span></button>
+                <ul class="sub-categories">
+                    <li><a href="#" data-subtype="Technical Recruiters">Technical Recruiters</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <div id="cardsContainer"></div>
+            <button class="view-more" id="loadMoreBtn">View More Jobs</button>
+        </main>
+    </div>
+
+    <div class="cta-fixed" id="ctaFixed">
+        <p>Don't see the right job?</p>
+        <button id="ctaCreateProfileBtn">Create Profile</button>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Task Hunt</h3>
+                <ul>
+                    <li><a href="#">About Task Hunt</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Rights Protection</a></li>
+                </ul>
+                <div class="social-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="social-icon"
+                            alt="Facebook">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="social-icon"
+                            alt="Instagram">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="social-icon"
+                            alt="TikTok">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="social-icon"
+                            alt="Twitter">
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Community</h3>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Discussions</a></li>
+                    <li><a href="#">Topics</a></li>
+                </ul>
+            </div>
+
+            <div id="contact-section" class="footer-col contact-col">
+                <div class="contact-box">
+                    <form id="contactForm">
+                        <h3>Drop us a message</h3>
+                        <div class="form-group">
+                            <input type="text" class="footer-input" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="footer-input" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="footer-input" rows="3" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="footer-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Task Hunt — All rights reserved</p>
+        </div>
+    </footer>
+    <script src="../assets/js/api.js"></script>
+    <script>
+        let allJobs = [];
+        let filteredJobs = [];
+        let visibleCount = 6;
+
+        function timeAgo(dateStr) {
+            const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+            if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            return Math.floor(diff / 86400) + 'd ago';
+        }
+
+        function renderJobs() {
+            const container = document.getElementById("cardsContainer");
+            if (!container) return;
+            container.innerHTML = "";
+            if (filteredJobs.length === 0) {
+                container.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">No jobs found. Try changing your filters.</div>';
+                document.getElementById("loadMoreBtn").style.display = "none";
+                return;
+            }
+            filteredJobs.slice(0, visibleCount).forEach(job => {
+                const card = document.createElement("div");
+                card.className = "up-card";
+                const authorAv = job.author_avatar
+                    ? `<img src="${job.author_avatar}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #e0f0ff;">`
+                    : `<div style="width:28px;height:28px;border-radius:50%;background:#0077B8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${(job.author_name||'U').charAt(0).toUpperCase()}</div>`;
+                card.innerHTML = `
+                <div class="card-main">
+                    <h3>${job.title}</h3>
+                    <div class="client-info" style="display:flex;align-items:center;gap:7px;">
+                      <span onclick="showUserProfile(${job.user_id})" style="cursor:pointer;display:flex;align-items:center;gap:6px;" title="View profile">
+                        ${authorAv}
+                        <strong style="color:#0077B8;">${job.author_name}</strong>
+                      </span>
+                      ${job.proposals_count > 0 ? '<span class="verified"></span>' : ''}
+                    </div>
+                    <p class="job-desc">${job.description}</p>
+                    <div class="tags"><span>${job.category}</span></div>
+                    <div class="meta">⏳ ${timeAgo(job.created_at)} | ${job.proposals_count} proposal${job.proposals_count !== 1 ? 's' : ''}</div>
+                </div>
+                <div class="card-side">
+                    <div class="budget">$${job.budget}<span>Fixed Price</span></div>
+                    <button class="apply-btn" onclick="openApply(${job.id}, '${job.title.replace(/'/g,"\\'")}')">Apply Now</button>
+                </div>`;
+                container.appendChild(card);
+            });
+            document.getElementById("loadMoreBtn").style.display = visibleCount >= filteredJobs.length ? "none" : "block";
+        }
+
+        function filterJobs() {
+            const type      = document.getElementById("typeFilter").value;
+            const priceRange = document.getElementById("priceFilter").value;
+            const searchTerm = document.getElementById("searchKeyword")?.value.toLowerCase().trim() || "";
+
+            filteredJobs = allJobs.filter(job => {
+                if (type !== "all" && job.category !== type) return false;
+                if (priceRange !== "all") {
+                    const [min, max] = priceRange.split("-").map(Number);
+                    if (job.budget < min || (max !== 9999 && job.budget > max)) return false;
+                }
+                if (searchTerm && !job.title.toLowerCase().includes(searchTerm) &&
+                    !job.description.toLowerCase().includes(searchTerm) &&
+                    !job.author_name.toLowerCase().includes(searchTerm)) return false;
+                return true;
+            });
+            visibleCount = 6;
+            renderJobs();
+        }
+
+        function loadMore() { visibleCount += 4; renderJobs(); }
+
+        // Load jobs from API
+        async function init() {
+            const container = document.getElementById("cardsContainer");
+            container.innerHTML = '<p style="padding:2rem;text-align:center;color:#888;">Loading...</p>';
+            try {
+                const res = await fetch('/api/posts?limit=100&status=open');
+                allJobs = await res.json();
+            } catch (e) {
+                container.innerHTML = '<p style="padding:2rem;text-align:center;color:#e00;">Failed to load. Is the server running?</p>';
+                return;
+            }
+            filterJobs();
+        }
+
+        // Event listeners
+        document.getElementById("typeFilter").addEventListener("change", filterJobs);
+        document.getElementById("priceFilter").addEventListener("change", filterJobs);
+        document.getElementById("expFilter").addEventListener("change", filterJobs);
+        document.getElementById("searchBtn").addEventListener("click", filterJobs);
+        document.getElementById("loadMoreBtn").addEventListener("click", loadMore);
+        document.getElementById("findProjectBtn").addEventListener("click", () => {
+            window.scrollTo({ top: document.querySelector(".page-layout").offsetTop - 30, behavior: "smooth" });
+        });
+        document.getElementById("searchKeyword")?.addEventListener("keypress", e => { if (e.key === "Enter") filterJobs(); });
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', e => { e.stopPropagation(); btn.parentElement.classList.toggle('active'); });
+        });
+        document.querySelectorAll('.sub-categories a').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                document.getElementById("searchKeyword").value = link.getAttribute('data-subtype') || '';
+                filterJobs();
+            });
+        });
+
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks   = document.getElementById("navLinks");
+        if (menuToggle) menuToggle.onclick = () => navLinks.classList.toggle("active");
+
+        const cta = document.querySelector('.cta-fixed');
+        const footerElem = document.querySelector('footer');
+        window.addEventListener('scroll', () => {
+            if (!footerElem || !cta) return;
+            const footerTop = footerElem.getBoundingClientRect().top;
+            const winH = window.innerHeight;
+            if (footerTop <= winH) { cta.classList.add('cta-stop'); cta.style.bottom = (winH - footerTop + 20) + 'px'; }
+            else { cta.classList.remove('cta-stop'); cta.style.bottom = '24px'; }
+        });
+
+        document.getElementById("contactForm")?.addEventListener("submit", e => {
+            e.preventDefault(); alert("Message sent!"); e.target.reset();
+        });
+
+        init();
+    </script>
+
+<!-- ══════════ PROPOSAL MODAL ══════════ -->
+<div id="applyModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;padding:32px;border-radius:14px;width:92%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative;">
+    <button onclick="closeApply()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#888;">×</button>
+    <h3 id="applyJobTitle" style="margin-bottom:6px;color:#051923;font-size:18px;"></h3>
+    <p style="color:#6b7280;font-size:13px;margin-bottom:20px;">Write a convincing proposal to win this job.</p>
+
+    <form id="applyForm">
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#051923;">Your Proposal Message *</label>
+        <textarea id="applyMsg" rows="5" placeholder="Describe why you're the best fit for this job, your relevant experience, and your approach…"
+          style="width:100%;padding:12px;border:1.5px solid #e2eaf0;border-radius:8px;font-family:inherit;font-size:14px;resize:vertical;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#0077B8'" onblur="this.style.borderColor='#e2eaf0'"></textarea>
+      </div>
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#051923;">Your Price (USD) *</label>
+        <input type="number" id="applyPrice" placeholder="e.g. 150" min="1"
+          style="width:100%;padding:11px 14px;border:1.5px solid #e2eaf0;border-radius:8px;font-size:14px;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#0077B8'" onblur="this.style.borderColor='#e2eaf0'">
+      </div>
+      <p id="applyError" style="color:#ef4444;font-size:13px;margin-bottom:10px;display:none;"></p>
+      <div style="display:flex;gap:10px;">
+        <button type="submit" id="applySubmitBtn"
+          style="flex:1;padding:12px;background:#0077B8;color:#fff;border:none;border-radius:25px;font-weight:700;font-size:15px;cursor:pointer;">
+          Submit Proposal
+        </button>
+        <button type="button" onclick="closeApply()"
+          style="flex:1;padding:12px;background:#f0f2f5;border:none;border-radius:25px;font-size:15px;cursor:pointer;">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <!-- Success view -->
+    <div id="applySuccess" style="display:none;text-align:center;padding:10px 0;">
+      <div style="font-size:52px;margin-bottom:12px;">🎉</div>
+      <h3 style="color:#051923;margin-bottom:8px;">Proposal Submitted!</h3>
+      <p style="color:#6b7280;font-size:14px;margin-bottom:20px;">The client will review your proposal and get back to you. Check your dashboard for updates.</p>
+      <button onclick="closeApply();window.location.href='dashboard/freelancer.html'"
+        style="padding:11px 28px;background:#0077B8;color:#fff;border:none;border-radius:25px;font-weight:700;cursor:pointer;">
+        View My Proposals
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="/assets/js/navbar.js"></script>
+<script>
+  let applyJobId = null;
+
+  function openApply(jobId, jobTitle) {
+    const user = Auth.user();
+    if (!user) { window.location.href = 'login.html'; return; }
+    if (user.role !== 'freelancer') { alert('Only freelancers can apply to jobs.'); return; }
+
+    applyJobId = jobId;
+    document.getElementById('applyJobTitle').textContent = jobTitle;
+    document.getElementById('applyForm').style.display   = 'block';
+    document.getElementById('applySuccess').style.display = 'none';
+    document.getElementById('applyError').style.display  = 'none';
+    document.getElementById('applyMsg').value   = '';
+    document.getElementById('applyPrice').value = '';
+    document.getElementById('applyModal').style.display = 'flex';
+  }
+
+  function closeApply() {
+    document.getElementById('applyModal').style.display = 'none';
+    applyJobId = null;
+  }
+
+  document.getElementById('applyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn   = document.getElementById('applySubmitBtn');
+    const errEl = document.getElementById('applyError');
+    const msg   = document.getElementById('applyMsg').value.trim();
+    const price = document.getElementById('applyPrice').value;
+
+    if (!msg)   { errEl.textContent = 'Please write your proposal message.'; errEl.style.display='block'; return; }
+    if (!price) { errEl.textContent = 'Please enter your price.'; errEl.style.display='block'; return; }
+
+    btn.disabled = true; btn.textContent = 'Submitting…'; errEl.style.display = 'none';
+    try {
+      await submitProposal(applyJobId, { message: msg, price: Number(price) });
+      document.getElementById('applyForm').style.display    = 'none';
+      document.getElementById('applySuccess').style.display = 'block';
+    } catch(err) {
+      errEl.textContent = err.message; errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Submit Proposal';
+    }
+  });
+
+  // Close modal on backdrop click
+  document.getElementById('applyModal').addEventListener('click', function(e) {
+    if (e.target === this) closeApply();
+  });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskHunt | Professional Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script>
+      // ── Admin Auth Guard (runs before page renders) ───────────────
+      (function() {
+        const u = Auth.user();
+        if (!u || u.role !== 'admin') {
+          window.location.replace('/html/login.html');
+        }
+      })();
+    </script>
+    <style>
+        :root {
+            --primary-blue: #0077B8;
+            --primary-dark: #005a8c;
+            --primary-light: #e3f2fd;
+            --bg-color: #f7f9fc;
+            --text-dark: #1a2b3c;
+            --text-gray: #6c7a89;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f7f9fc 0%, #eef2f7 100%);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Dark Mode */
+        body.dark {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0f1119 100%);
+        }
+
+        body.dark .sidebar {
+            background: rgba(26, 31, 46, 0.95);
+            border-right-color: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark .main-content {
+            background: transparent;
+        }
+
+        body.dark .card,
+        body.dark .mini-card,
+        body.dark .search-area,
+        body.dark .user-profile,
+        body.dark .table-container,
+        body.dark .modal-content {
+            background: rgba(31, 37, 55, 0.95);
+            border-color: rgba(255, 255, 255, 0.05);
+            color: #e5e7eb;
+        }
+
+        body.dark .card-header h3,
+        body.dark .mini-card h4,
+        body.dark td,
+        body.dark .welcome-msg p {
+            color: #e5e7eb;
+        }
+
+        body.dark .stat-value,
+        body.dark .stat-label {
+            color: #e5e7eb;
+        }
+
+        body.dark .sidebar nav ul li {
+            color: #9ca3af;
+        }
+
+        body.dark .sidebar nav ul li.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        body.dark input,
+        body.dark select {
+            background: #1f2937;
+            color: white;
+            border-color: #374151;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+        }
+
+        .logo {
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-blue);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo h2 {
+            font-size: 22px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        body.dark .logo h2 {
+            color: white;
+        }
+
+        .logo p {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav ul li i {
+            width: 22px;
+            font-size: 18px;
+        }
+
+        nav ul li.active {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 119, 184, 0.2);
+        }
+
+        nav ul li:hover:not(.active) {
+            background: rgba(0, 119, 184, 0.08);
+            color: var(--primary-blue);
+            transform: translateX(5px);
+        }
+
+        hr {
+            margin: 20px 0;
+            border-color: var(--border-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 32px 40px;
+            overflow-y: auto;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-msg h1 {
+            font-size: 28px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .welcome-msg p {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-area {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            width: 280px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+        }
+
+        .search-area input {
+            border: none;
+            outline: none;
+            padding-left: 12px;
+            width: 100%;
+            background: transparent;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--text-gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 16px 6px 12px;
+            background: white;
+            border-radius: 40px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .user-profile img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-gray);
+            padding: 8px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary-blue);
+            margin-bottom: 16px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-card h3 {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .table-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-filter input {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-gray);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-banned {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            padding: 6px 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+            color: var(--text-gray);
+        }
+
+        .btn-icon:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--primary-blue);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            width: 90%;
+            max-width: 500px;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            z-index: 1100;
+            animation: slideInRight 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Notification Dropdown */
+        .notifications-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 120px;
+            background: white;
+            border-radius: 20px;
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 100;
+            border: 1px solid var(--border-color);
+        }
+
+        .notifications-dropdown.show {
+            display: block;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notification-item:hover {
+            background: rgba(0, 119, 184, 0.05);
+        }
+
+        .notification-item.unread {
+            background: rgba(0, 119, 184, 0.08);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 119, 184, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-tasks"></i></div>
+            <div>
+                <h2>TaskHunt</h2>
+                <p>Admin Dashboard</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</li>
+                <li data-page="users"><i class="fas fa-users"></i> Users</li>
+                <li data-page="jobs"><i class="fas fa-briefcase"></i> Jobs</li>
+                <li data-page="finance"><i class="fas fa-dollar-sign"></i> Finance</li>
+                <li data-page="admins"><i class="fas fa-user-shield"></i> Admin Accounts</li>
+            </ul>
+        </nav>
+        <div style="padding: 16px 20px; margin-top: auto; border-top: 1px solid var(--border-color);">
+            <button id="logoutBtn" onclick="Auth.logout()" style="width:100%;padding:9px 14px;background:rgba(220,53,69,.1);color:#dc3545;border:1px solid rgba(220,53,69,.25);border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;justify-content:center;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-header">
+            <div class="welcome-msg">
+                <h1 id="welcomeMsg">Welcome back! 👋</h1>
+                <p>Here's what's happening with your platform today</p>
+            </div>
+            <div class="header-actions">
+                <div class="search-area">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search..." id="globalSearch">
+                </div>
+                <div class="dark-mode-toggle" id="darkModeToggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">3</span>
+                </div>
+                <div class="user-profile">
+                    <img src="https://i.pravatar.cc/150?u=admin" alt="Admin">
+                    <span id="adminNameDisplay">Admin</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="pageContent"></div>
+    </main>
+
+    <!-- Modals -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add User</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="userStatus">
+                        <option value="Active">Active</option>
+                        <option value="Banned">Banned</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Save User</button>
+                <button type="button" onclick="closeModal('userModal')" style="margin-left: 10px;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notificationsDropdown" class="notifications-dropdown"></div>
+
+    <script>
+        // ==================== STATE MANAGEMENT ====================
+        let currentPage = 'dashboard';
+        let editingUserId = null;
+
+        // Data Stores
+        let users = [
+            { id: 1, name: 'John Doe', email: 'john@example.com', status: 'Active', joined: '2024-01-15' },
+            { id: 2, name: 'Jane Smith', email: 'jane@example.com', status: 'Active', joined: '2024-02-20' },
+            { id: 3, name: 'Bob Johnson', email: 'bob@example.com', status: 'Banned', joined: '2024-01-10' },
+            { id: 4, name: 'Alice Brown', email: 'alice@example.com', status: 'Active', joined: '2024-03-01' },
+        ];
+
+        let jobs = [
+            { id: 1, title: 'Website Development', client: 'Tech Corp', budget: 5000, status: 'Pending', posted: '2024-03-10' },
+            { id: 2, title: 'Logo Design', client: 'Creative Studio', budget: 500, status: 'Approved', posted: '2024-03-12' },
+            { id: 3, title: 'Content Writing', client: 'Media House', budget: 1000, status: 'Rejected', posted: '2024-03-09' },
+            { id: 4, title: 'API Integration', client: 'Startup Inc', budget: 2500, status: 'Pending', posted: '2024-03-14' },
+        ];
+
+        let withdrawRequests = [
+            { id: 1, user: 'John Doe', amount: 500, status: 'Pending', date: '2024-03-15' },
+            { id: 2, user: 'Jane Smith', amount: 1200, status: 'Pending', date: '2024-03-14' },
+        ];
+
+        let notifications = [
+            { id: 1, message: 'New user registered: Sarah Wilson', time: '2 min ago', read: false },
+            { id: 2, message: 'Job approval needed: Mobile App Development', time: '15 min ago', read: false },
+            { id: 3, message: 'Withdraw request from John Doe ($500)', time: '1 hour ago', read: false },
+        ];
+
+        let platformStats = {
+            totalUsers: 0,
+            activeJobs: 0,
+            totalRevenue: 0,
+            reportsCount: 0
+        };
+
+        // Charts
+        let revenueChart, usersChart;
+
+        // Helper Functions
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}" style="color: ${type === 'success' ? '#28a745' : '#dc3545'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            editingUserId = null;
+        }
+
+        function updateStats() {
+            platformStats.totalUsers = users.length;
+            platformStats.activeJobs = jobs.filter(j => j.status === 'Approved').length;
+            if (revenueChart && usersChart) {
+                revenueChart.data.datasets[0].data = [15000, 22000, 28000, 32000, 35000, platformStats.totalRevenue];
+                usersChart.data.datasets[0].data = [1200, 1800, 2200, 2500, 2700, platformStats.totalUsers];
+                revenueChart.update();
+                usersChart.update();
+            }
+        }
+
+        // CRUD Operations
+        function addUser(userData) {
+            const newUser = { id: Date.now(), ...userData, joined: new Date().toISOString().split('T')[0] };
+            users.push(newUser);
+            updateStats();
+            showToast('User added successfully');
+            renderCurrentPage();
+        }
+
+        function updateUser(id, userData) {
+            const index = users.findIndex(u => u.id === id);
+            if (index !== -1) {
+                users[index] = { ...users[index], ...userData };
+                updateStats();
+                showToast('User updated successfully');
+                renderCurrentPage();
+            }
+        }
+
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                users = users.filter(u => u.id !== id);
+                updateStats();
+                showToast('User deleted successfully');
+                renderCurrentPage();
+            }
+        }
+
+        function toggleUserStatus(id) {
+            const user = users.find(u => u.id === id);
+            if (user) {
+                user.status = user.status === 'Active' ? 'Banned' : 'Active';
+                showToast(`User ${user.status === 'Active' ? 'activated' : 'banned'}`);
+                renderCurrentPage();
+            }
+        }
+
+        function approveJob(id) {
+            const job = jobs.find(j => j.id === id);
+            if (job) {
+                job.status = 'Approved';
+                showToast('Job approved successfully');
+                renderCurrentPage();
+            }
+        }
+
+        function rejectJob(id) {
+            const job = jobs.find(j => j.id === id);
+            if (job) {
+                job.status = 'Rejected';
+                showToast('Job rejected');
+                renderCurrentPage();
+            }
+        }
+
+        function deleteJob(id) {
+            if (confirm('Delete this job?')) {
+                jobs = jobs.filter(j => j.id !== id);
+                showToast('Job deleted');
+                renderCurrentPage();
+            }
+        }
+
+        function approveWithdraw(id) {
+            withdrawRequests = withdrawRequests.filter(w => w.id !== id);
+            showToast('Withdraw approved');
+            renderCurrentPage();
+        }
+
+        function rejectWithdraw(id) {
+            withdrawRequests = withdrawRequests.filter(w => w.id !== id);
+            showToast('Withdraw rejected');
+            renderCurrentPage();
+        }
+
+        // Render Functions
+        function renderDashboard() {
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-value">${platformStats.totalUsers.toLocaleString()}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-briefcase"></i></div>
+                        <div class="stat-value">${platformStats.activeJobs.toLocaleString()}</div>
+                        <div class="stat-label">Active Jobs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="stat-value">$${platformStats.totalRevenue.toLocaleString()}</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-flag"></i></div>
+                        <div class="stat-value">${platformStats.reportsCount}</div>
+                        <div class="stat-label">Reports</div>
+                    </div>
+                </div>
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <h3>Revenue Overview</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>User Growth</h3>
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Recent Activity</h3>
+                        <a href="#" style="color: var(--primary-blue); text-decoration: none;">View All</a>
+                    </div>
+                    <div id="recentActivity"></div>
+                </div>
+            `;
+        }
+
+        function renderUsers() {
+            return `
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3><i class="fas fa-users"></i> Users Management</h3>
+                        <div style="display: flex; gap: 12px;">
+                            <div class="search-filter">
+                                <input type="text" id="userSearch" placeholder="Search users..." style="width: 200px;">
+                            </div>
+                            <button class="btn-primary" onclick="openAddUserModal()"><i class="fas fa-plus"></i> Add User</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Name</th><th>Email</th><th>Status</th><th>Joined</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderJobs() {
+            return `
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3><i class="fas fa-briefcase"></i> Jobs Management</h3>
+                        <div class="search-filter">
+                            <input type="text" id="jobSearch" placeholder="Search jobs...">
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Title</th><th>Client</th><th>Budget</th><th>Status</th><th>Posted</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="jobsTableBody"></tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderFinance() {
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-value">$${platformStats.totalRevenue.toLocaleString()}</div>
+                        <div class="stat-label">Total Earnings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-percent"></i></div>
+                        <div class="stat-value">15%</div>
+                        <div class="stat-label">Platform Commission</div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3><i class="fas fa-money-bill-wave"></i> Withdraw Requests</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>User</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="withdrawTableBody"></tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderSettings() {
+            return `
+                <div class="table-container">
+                    <h3><i class="fas fa-user-cog"></i> Admin Profile</h3>
+                    <form id="profileForm" style="margin-top: 20px;">
+                        <div class="form-group"><label>Full Name</label><input type="text" id="adminName" value="Alex Morgan"></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="adminEmail" value="alex@taskhunt.com"></div>
+                        <div class="form-group"><label>Role</label><input type="text" value="Super Admin" disabled></div>
+                        <button type="submit" class="btn-primary">Update Profile</button>
+                    </form>
+                    <hr style="margin: 30px 0;">
+                    <h3><i class="fas fa-sliders-h"></i> Platform Settings</h3>
+                    <div class="form-group"><label>Commission Rate (%)</label><input type="number" id="commissionRate" value="15"></div>
+                    <div class="form-group"><label>Minimum Withdraw Amount ($)</label><input type="number" id="minWithdraw" value="50"></div>
+                    <div class="form-group"><label><input type="checkbox" id="emailNotifications" checked> Enable Email Notifications</label></div>
+                    <button onclick="saveSettings()" class="btn-primary">Save Settings</button>
+                </div>
+            `;
+        }
+
+        function renderRecentActivity() {
+            const container = document.getElementById('recentActivity');
+            if (container) {
+                container.innerHTML = users.slice(0, 5).map(user => `
+                    <div style="padding: 12px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;">
+                        <div><strong>${user.name}</strong> joined the platform</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">${user.joined}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderUsersTable() {
+            const searchTerm = document.getElementById('userSearch')?.value.toLowerCase() || '';
+            const filteredUsers = users.filter(u => u.name.toLowerCase().includes(searchTerm) || u.email.toLowerCase().includes(searchTerm));
+            const tbody = document.getElementById('usersTableBody');
+            if (tbody) {
+                tbody.innerHTML = filteredUsers.map(user => `
+                    <tr>
+                        <td><strong>${user.name}</strong></td>
+                        <td>${user.email}</td>
+                        <td><span class="status-badge status-${user.status === 'Active' ? 'active' : 'banned'}">${user.status}</span></td>
+                        <td>${user.joined}</td>
+                        <td class="action-buttons">
+                            <button class="btn-icon" onclick="editUser(${user.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="toggleUserStatus(${user.id})"><i class="fas fa-${user.status === 'Active' ? 'ban' : 'check'}"></i></button>
+                            <button class="btn-icon" onclick="deleteUser(${user.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderJobsTable() {
+            const searchTerm = document.getElementById('jobSearch')?.value.toLowerCase() || '';
+            const filteredJobs = jobs.filter(j => j.title.toLowerCase().includes(searchTerm) || j.client.toLowerCase().includes(searchTerm));
+            const tbody = document.getElementById('jobsTableBody');
+            if (tbody) {
+                tbody.innerHTML = filteredJobs.map(job => `
+                    <tr>
+                        <td><strong>${job.title}</strong></td>
+                        <td>${job.client}</td>
+                        <td>$${job.budget.toLocaleString()}</td>
+                        <td><span class="status-badge status-${job.status.toLowerCase()}">${job.status}</span></td>
+                        <td>${job.posted}</td>
+                        <td class="action-buttons">
+                            ${job.status === 'Pending' ? `<button class="btn-icon" onclick="approveJob(${job.id})"><i class="fas fa-check" style="color: #28a745;"></i></button>` : ''}
+                            ${job.status === 'Pending' ? `<button class="btn-icon" onclick="rejectJob(${job.id})"><i class="fas fa-times" style="color: #dc3545;"></i></button>` : ''}
+                            <button class="btn-icon" onclick="deleteJob(${job.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderWithdrawTable() {
+            const tbody = document.getElementById('withdrawTableBody');
+            if (tbody) {
+                tbody.innerHTML = withdrawRequests.map(req => `
+                    <tr>
+                        <td><strong>${req.user}</strong></td>
+                        <td>$${req.amount.toLocaleString()}</td>
+                        <td>${req.date}</td>
+                        <td><span class="status-badge status-pending">${req.status}</span></td>
+                        <td class="action-buttons">
+                            <button class="btn-icon" onclick="approveWithdraw(${req.id})"><i class="fas fa-check" style="color: #28a745;"></i></button>
+                            <button class="btn-icon" onclick="rejectWithdraw(${req.id})"><i class="fas fa-times" style="color: #dc3545;"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function initCharts() {
+            const revenueCtx = document.getElementById('revenueChart')?.getContext('2d');
+            const usersCtx = document.getElementById('usersChart')?.getContext('2d');
+            if (revenueCtx) {
+                revenueChart = new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Revenue ($)',
+                            data: [15000, 22000, 28000, 32000, 35000, platformStats.totalRevenue],
+                            borderColor: '#0077B8',
+                            backgroundColor: 'rgba(0, 119, 184, 0.05)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: { legend: { position: 'top' } }
+                    }
+                });
+            }
+            if (usersCtx) {
+                usersChart = new Chart(usersCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Total Users',
+                            data: [1200, 1800, 2200, 2500, 2700, platformStats.totalUsers],
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.05)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: { legend: { position: 'top' } }
+                    }
+                });
+            }
+        }
+
+        function renderCurrentPage() {
+            const contentDiv = document.getElementById('pageContent');
+            switch(currentPage) {
+                case 'dashboard':
+                    contentDiv.innerHTML = renderDashboard();
+                    initCharts();
+                    renderRecentActivity();
+                    break;
+                case 'users':
+                    contentDiv.innerHTML = renderUsers();
+                    renderUsersTable();
+                    document.getElementById('userSearch')?.addEventListener('input', () => renderUsersTable());
+                    break;
+                case 'jobs':
+                    contentDiv.innerHTML = renderJobs();
+                    renderJobsTable();
+                    document.getElementById('jobSearch')?.addEventListener('input', () => renderJobsTable());
+                    break;
+                case 'finance':
+                    contentDiv.innerHTML = renderFinance();
+                    renderWithdrawTable();
+                    break;
+                case 'admins':
+                    contentDiv.innerHTML = renderAdminAccounts();
+                    getAdminAccounts()
+                        .then(list => { adminAccounts = list; renderAdminTable(); })
+                        .catch(e => showToast(e.message, 'error'));
+                    break;
+                case 'settings':
+                    contentDiv.innerHTML = renderSettings();
+                    break;
+                case 'profile':
+                    contentDiv.innerHTML = renderSettings();
+                    break;
+            }
+        }
+
+        function openAddUserModal() {
+            editingUserId = null;
+            document.getElementById('modalTitle').innerText = 'Add User';
+            document.getElementById('userForm').reset();
+            document.getElementById('userModal').style.display = 'flex';
+        }
+
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            if (user) {
+                editingUserId = id;
+                document.getElementById('modalTitle').innerText = 'Edit User';
+                document.getElementById('userName').value = user.name;
+                document.getElementById('userEmail').value = user.email;
+                document.getElementById('userStatus').value = user.status;
+                document.getElementById('userModal').style.display = 'flex';
+            }
+        }
+
+        function saveSettings() {
+            showToast('Settings saved successfully');
+        }
+
+        // Notification Dropdown
+        function renderNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            if (dropdown) {
+                dropdown.innerHTML = notifications.map(notif => `
+                    <div class="notification-item ${!notif.read ? 'unread' : ''}" onclick="markNotificationAsRead(${notif.id})">
+                        <div><strong>${notif.message}</strong></div>
+                        <div style="font-size: 11px; color: var(--text-gray);">${notif.time}</div>
+                    </div>
+                `).join('');
+                document.getElementById('notificationCount').innerText = notifications.filter(n => !n.read).length;
+            }
+        }
+
+        function markNotificationAsRead(id) {
+            const notif = notifications.find(n => n.id === id);
+            if (notif) notif.read = true;
+            renderNotifications();
+        }
+
+        // Event Listeners
+        document.getElementById('userForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userData = {
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                status: document.getElementById('userStatus').value
+            };
+            if (editingUserId) {
+                updateUser(editingUserId, userData);
+            } else {
+                addUser(userData);
+            }
+            closeModal('userModal');
+        });
+
+        document.getElementById('profileForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showToast('Profile updated successfully');
+        });
+
+        document.querySelectorAll('.nav-item, .sidebar nav ul li').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                if (page) {
+                    document.querySelectorAll('.sidebar nav ul li').forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    currentPage = page;
+                    renderCurrentPage();
+                }
+            });
+        });
+
+        document.getElementById('darkModeToggle')?.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+        });
+
+        document.getElementById('notificationBell')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dropdown = document.getElementById('notificationsDropdown');
+            dropdown.classList.toggle('show');
+            renderNotifications();
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('notificationsDropdown')?.classList.remove('show');
+        });
+
+        // ── Show admin name ───────────────────────────────────────
+        (function() {
+            const u = Auth.user();
+            if (u) {
+                const n = u.name || 'Admin';
+                const welcomeEl = document.getElementById('welcomeMsg');
+                const nameEl    = document.getElementById('adminNameDisplay');
+                if (welcomeEl) welcomeEl.textContent = 'Welcome back, ' + n + '! 👋';
+                if (nameEl)    nameEl.textContent = n;
+            }
+        })();
+
+        // ── Render: Admin Accounts page ───────────────────────────
+        let adminAccounts = [];
+
+        function renderAdminAccounts() {
+            return `
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3><i class="fas fa-user-shield"></i> Admin Accounts</h3>
+                        <button class="btn-primary" onclick="openAddAdminModal()">
+                            <i class="fas fa-plus"></i> Add Admin
+                        </button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th>Name</th><th>Email</th><th>Created</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="adminTableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Add Admin Modal -->
+                <div id="addAdminModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+                    <div style="background:var(--card-bg,#fff);border-radius:14px;padding:32px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+                        <h3 style="margin-bottom:20px;font-size:17px;"><i class="fas fa-user-plus" style="color:#0077B8;margin-left:8px;"></i> Add New Admin</h3>
+                        <div class="form-group"><label>Full Name</label><input type="text" id="newAdminName" placeholder="e.g. Ahmed Ali"></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="newAdminEmail" placeholder="email@example.com"></div>
+                        <div class="form-group"><label>Password</label><input type="password" id="newAdminPass" placeholder="Min 6 characters"></div>
+                        <p id="addAdminError" style="color:#dc3545;font-size:13px;margin-bottom:10px;display:none;"></p>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn-primary" onclick="saveNewAdmin()" style="flex:1;">Save</button>
+                            <button onclick="closeAddAdminModal()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;cursor:pointer;background:none;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminTableBody');
+            if (!tbody) return;
+            const me = Auth.user();
+            tbody.innerHTML = adminAccounts.map((a, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td><strong>${a.name}</strong>${me && me.id === a.id ? ' <span style="font-size:11px;color:#0077B8;">(you)</span>' : ''}</td>
+                    <td>${a.email}</td>
+                    <td>${(a.created_at||'').split('T')[0]||a.created_at||'—'}</td>
+                    <td class="action-buttons">
+                        ${me && me.id !== a.id ? `<button class="btn-icon" onclick="removeAdmin(${a.id})" title="Delete"><i class="fas fa-trash" style="color:#dc3545;"></i></button>` : '<span style="color:#aaa;font-size:12px;">—</span>'}
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px;">No admin accounts found</td></tr>';
+        }
+
+        function openAddAdminModal() {
+            document.getElementById('addAdminModal').style.display = 'flex';
+            document.getElementById('addAdminError').style.display = 'none';
+            document.getElementById('newAdminName').value  = '';
+            document.getElementById('newAdminEmail').value = '';
+            document.getElementById('newAdminPass').value  = '';
+        }
+
+        function closeAddAdminModal() {
+            document.getElementById('addAdminModal').style.display = 'none';
+        }
+
+        async function saveNewAdmin() {
+            const name     = document.getElementById('newAdminName').value.trim();
+            const email    = document.getElementById('newAdminEmail').value.trim();
+            const password = document.getElementById('newAdminPass').value;
+            const errEl    = document.getElementById('addAdminError');
+
+            if (!name || !email || !password) {
+                errEl.textContent = 'All fields are required';
+                errEl.style.display = 'block';
+                return;
+            }
+            if (password.length < 6) {
+                errEl.textContent = 'Password must be at least 6 characters';
+                errEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const newAdmin = await addAdminAccount({ name, email, password });
+                adminAccounts.push(newAdmin);
+                closeAddAdminModal();
+                renderAdminTable();
+                showToast('Admin account created successfully');
+            } catch(e) {
+                errEl.textContent = e.message;
+                errEl.style.display = 'block';
+            }
+        }
+
+        async function removeAdmin(id) {
+            if (!confirm('Delete this admin account?')) return;
+            try {
+                await deleteAdminAccount(id);
+                adminAccounts = adminAccounts.filter(a => a.id !== id);
+                renderAdminTable();
+                showToast('Admin deleted');
+            } catch(e) {
+                showToast(e.message, 'error');
+            }
+        }
+
+        // ── Load real data from DB ────────────────────────────────
+        async function initAdminDashboard() {
+            try {
+                const stats = await getAdminStats();
+                platformStats.totalUsers   = stats.users     || 0;
+                platformStats.activeJobs   = stats.posts     || 0;
+                platformStats.reportsCount = stats.proposals || 0;
+            } catch(e) { console.error('Stats:', e.message); }
+
+            try {
+                const apiUsers = await getAdminUsers();
+                users = apiUsers.map(u => ({
+                    id: u.id, name: u.name, email: u.email,
+                    role: u.role, status: 'Active',
+                    joined: (u.created_at||'').split('T')[0]||(u.created_at||'')
+                }));
+            } catch(e) { console.error('Users:', e.message); }
+
+            try {
+                const apiPosts = await getPosts('limit=50');
+                jobs = apiPosts.map(p => ({
+                    id: p.id, title: p.title,
+                    client: p.author_name || 'N/A',
+                    budget: p.budget,
+                    status: p.status === 'open' ? 'Approved' : 'Closed',
+                    posted: (p.created_at||'').split('T')[0]||(p.created_at||'')
+                }));
+            } catch(e) { console.error('Posts:', e.message); }
+
+            renderCurrentPage();
+        }
+
+        initAdminDashboard();
+
+        // Make functions global
+        window.openAddUserModal = openAddUserModal;
+        window.editUser = editUser;
+        window.deleteUser = deleteUser;
+        window.toggleUserStatus = toggleUserStatus;
+        window.approveJob = approveJob;
+        window.rejectJob = rejectJob;
+        window.deleteJob = deleteJob;
+        window.approveWithdraw = approveWithdraw;
+        window.rejectWithdraw = rejectWithdraw;
+        window.closeModal = closeModal;
+        window.showToast = showToast;
+        window.saveSettings = saveSettings;
+        window.markNotificationAsRead = markNotificationAsRead;
+        window.openAddAdminModal = openAddAdminModal;
+        window.closeAddAdminModal = closeAddAdminModal;
+        window.saveNewAdmin = saveNewAdmin;
+        window.removeAdmin = removeAdmin;
+    </script>
+</body>
+</html>

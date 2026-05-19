@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelancer Dashboard | TaskHunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="dash-nav">
+  <a href="../freelancers-home.html" class="logo">Task<span>Hunt</span></a>
+  <div class="dash-nav-right">
+    <div class="notif-bell" id="notifBell" onclick="toggleNotifDrop()">
+      <i class="fas fa-bell"></i>
+      <div class="notif-badge" id="notifBadge"></div>
+      <div class="notif-dropdown" id="notifDrop">
+        <div class="notif-drop-header">
+          Notifications
+          <button onclick="markAllRead(event)">Mark all read</button>
+        </div>
+        <div class="notif-list" id="notifList"><div class="notif-empty">Loading…</div></div>
+      </div>
+    </div>
+    <div class="nav-avatar" id="navAvatar"></div>
+    <a href="../freelancers-home.html" style="font-size:13px;color:#4a6272;">← Home</a>
+    <a href="#" onclick="Auth.logout();return false;" style="font-size:13px;color:#ef4444;">Logout</a>
+  </div>
+</nav>
+
+<div class="dash-layout">
+  <div class="dash-header">
+    <h1>My Dashboard</h1>
+    <p>Track your proposals and active conversations with clients.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Proposals Sent</div><div class="stat-num" id="statSent">—</div><div class="stat-icon">📤</div></div>
+    <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-num" id="statPending">—</div><div class="stat-icon">⏳</div></div>
+    <div class="stat-card"><div class="stat-label">Accepted</div><div class="stat-num" id="statAccepted">—</div><div class="stat-icon">✅</div></div>
+    <div class="stat-card"><div class="stat-label">Active Chats</div><div class="stat-num" id="statChats">—</div><div class="stat-icon">💬</div></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-card-header">My Proposals <a href="../work.html" style="font-size:13px;color:#0077B8;">Browse Jobs →</a></div>
+    <div class="section-card-body" id="proposalsContainer"><div class="empty-state"><div class="empty-icon">⏳</div><p>Loading…</p></div></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-card-header">Active Conversations</div>
+    <div class="section-card-body" id="chatsContainer"><div class="empty-state"><div class="empty-icon">⏳</div><p>Loading…</p></div></div>
+  </div>
+</div>
+
+<script src="../../assets/js/api.js"></script>
+<script>
+if (!Auth.isLoggedIn()) window.location.href = '../login.html';
+const me = Auth.user();
+if (me && me.role !== 'freelancer') window.location.href = '../client-home.html';
+
+document.getElementById('navAvatar').textContent = me ? me.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : '?';
+
+let notifOpen = false;
+function toggleNotifDrop() {
+  notifOpen = !notifOpen;
+  document.getElementById('notifDrop').classList.toggle('open', notifOpen);
+  if (notifOpen) loadNotifications();
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('notifBell').contains(e.target)) { notifOpen=false; document.getElementById('notifDrop').classList.remove('open'); }
+});
+
+function timeAgo(d) {
+  const diff=Date.now()-new Date(d), m=Math.floor(diff/60000), h=Math.floor(m/60), day=Math.floor(h/24);
+  if(day>0)return`${day}d ago`;if(h>0)return`${h}h ago`;if(m>0)return`${m}m ago`;return'just now';
+}
+const notifIcon={proposal_received:'📩',proposal_accepted:'🎉',proposal_rejected:'❌',new_message:'💬'};
+
+async function loadNotifications() {
+  const list=document.getElementById('notifList');
+  try {
+    const notifs=await get('/notifications');
+    const badge=document.getElementById('notifBadge');
+    const unread=notifs.filter(n=>!n.is_read).length;
+    badge.textContent=unread>9?'9+':unread; badge.style.display=unread>0?'flex':'none';
+    if(!notifs.length){list.innerHTML='<div class="notif-empty">No notifications yet</div>';return;}
+    list.innerHTML=notifs.map(n=>`
+      <div class="notif-item ${n.is_read?'':'unread'}" onclick="handleNotif(${n.id},'${n.ref_type}',${n.ref_id})">
+        <div class="notif-icon">${notifIcon[n.type]||'🔔'}</div>
+        <div class="notif-content">
+          <div class="notif-title">${n.title}</div>
+          <div class="notif-body">${n.body}</div>
+          <div class="notif-time">${timeAgo(n.created_at)}</div>
+        </div>
+      </div>`).join('');
+  } catch(e){list.innerHTML='<div class="notif-empty">Failed to load</div>';}
+}
+async function handleNotif(id,refType,refId) {
+  await fetch(`/api/notifications/${id}/read`,{method:'PUT',headers:{'Authorization':'Bearer '+Auth.token()}});
+  if(refType==='conversation') window.location.href=`../../html/chat.html?id=${refId}`;
+  loadNotifications();
+}
+async function markAllRead(e) {
+  e.stopPropagation();
+  await fetch('/api/notifications/read-all',{method:'PUT',headers:{'Authorization':'Bearer '+Auth.token()}});
+  loadNotifications();
+}
+async function pollNotifCount() {
+  try{const d=await get('/notifications/unread-count');const b=document.getElementById('notifBadge');b.textContent=d.count>9?'9+':d.count;b.style.display=d.count>0?'flex':'none';}catch(_){}
+}
+
+async function loadDashboard() {
+  try {
+    const [proposals, convs] = await Promise.all([getMyProposals(), get('/chat/conversations')]);
+    document.getElementById('statSent').textContent    = proposals.length;
+    document.getElementById('statPending').textContent  = proposals.filter(p=>p.status==='pending').length;
+    document.getElementById('statAccepted').textContent = proposals.filter(p=>p.status==='accepted').length;
+    document.getElementById('statChats').textContent    = convs.length;
+
+    const propEl = document.getElementById('proposalsContainer');
+    if (!proposals.length) {
+      propEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📤</div><p>No proposals sent yet. <a href="../work.html" style="color:#0077B8;">Find a job →</a></p></div>';
+    } else {
+      propEl.innerHTML = proposals.map(pr => {
+        const statusBadge = `<span class="status-${pr.status}">${pr.status.charAt(0).toUpperCase()+pr.status.slice(1)}</span>`;
+        let chatBtn = '';
+        if (pr.status === 'accepted') {
+          const conv = convs.find(c => c.proposal_id === pr.id);
+          if (conv) chatBtn = `<button class="btn-chat" onclick="window.location.href='../../html/chat.html?id=${conv.id}'">💬 Chat</button>`;
+        }
+        return `
+          <div class="my-proposal-row">
+            <div class="my-proposal-info">
+              <div class="my-proposal-post">${pr.post_title}</div>
+              <div class="my-proposal-msg">${pr.message.slice(0,100)}${pr.message.length>100?'…':''}</div>
+              <div style="margin-top:5px;font-size:12px;color:#9ab;">${timeAgo(pr.created_at)} · Client: ${pr.client_name}</div>
+            </div>
+            <div class="my-proposal-price">$${pr.price}</div>
+            ${statusBadge}
+            ${chatBtn}
+          </div>`;
+      }).join('');
+    }
+
+    const chatsEl = document.getElementById('chatsContainer');
+    if (!convs.length) {
+      chatsEl.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>No active conversations yet.</p></div>';
+    } else {
+      chatsEl.innerHTML = convs.map(c => `
+        <div class="my-proposal-row" style="cursor:pointer;" onclick="window.location.href='../../html/chat.html?id=${c.id}'">
+          <div class="proposal-avatar">${c.client_name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+          <div class="my-proposal-info">
+            <div class="my-proposal-post">${c.client_name}</div>
+            <div class="my-proposal-msg">${c.post_title} — ${c.last_message||'No messages yet'}</div>
+          </div>
+          ${c.unread_count>0?`<span class="conv-unread">${c.unread_count}</span>`:''}
+          <button class="btn-chat">Open Chat</button>
+        </div>`).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+loadDashboard();
+loadNotifications();
+setInterval(pollNotifCount, 15000);
+</script>
+</body>
+</html>

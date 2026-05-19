@@ -1,0 +1,422 @@
+/* COLOR PALETTE  */
+    :root {
+      --c1: #00A8FF;
+      --c2: #0090E0;
+      --c3: #0077B8;
+      --c4: #051923;
+      --c5 : #ffffff;
+      --white: #ffffff;
+      --light: #e6f7ff;
+    }
+   /* NAVBAR */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0px 30px;
+      height: 50px;
+      background: var(--white);
+    }
+    .logo img {
+      height: 38px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+    nav ul li a {
+      color: var(--c4);
+      text-decoration: none;
+      font-size: 18px;
+      transition: 0.3s;
+    }
+    nav ul li a:hover {
+      color: var(--c1);
+    }
+
+body {
+  background: #f7f8fc;
+  color: #333;
+  line-height: 1.6;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  padding: 60px 0;
+}
+
+/* Hero */
+.hero {
+  height: 100vh;
+  background: linear-gradient(135deg, #3b82f6, #4326eb);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  height: 100vh;
+
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+
+
+.hero p {
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+.btn {
+  background: white;
+  color: #3b82f6;
+  padding: 12px 25px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 600;
+}
+
+/* Sections */
+section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 25px;
+}
+
+.about p,
+.story p,
+.team p {
+  max-width: 700px;
+  margin: auto;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Story */
+.story {
+  background: #ffffff;
+}
+.about-title {
+  font-size: 120px;
+  font-weight: 800;
+  color: #003554;
+  
+  position: absolute;     
+  top: 10px;               
+  font-size: 120px;
+  font-weight: 800;
+ 
+}
+
+/* --- Global & Reset Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background-color: #f4f4f9; 
+}
+
+/* --- Color Variables --- */
+:root {
+    --color-dark-text: #003554; 
+    --color-accent: #00A6FB; 
+    --color-medium-accent: #0582CA; 
+}
+
+/* --- General Styling --- */
+.section-title {
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: var(--color-dark-text); 
+}
+
+.box-title { 
+    font-size: 1.8em;
+    color: var(--color-dark-text); 
+    margin-bottom: 25px;
+    border-bottom: 3px solid var(--color-accent); 
+    padding-bottom: 10px;
+}
+
+/* --- CTA Button General Style --- */
+.cta-button {
+    display: inline-block;
+    background-color: var(--color-accent); 
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.cta-button:hover {
+    background-color: var(--color-medium-accent); 
+}
+
+/* ----------------------------------------------------------------
+ * STATS AND VALUES SECTION
+ * ---------------------------------------------------------------- */
+
+.stats-values-section {
+    display: flex; 
+    justify-content: space-around; 
+    align-items: flex-start;
+    gap: 50px;
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto; 
+}
+
+.stats-box { 
+    flex: 1; 
+    min-width: 45%;
+}
+
+.stats-box ul {
+    list-style: none; 
+}
+
+.stats-box ul li {
+    font-size: 1.1em;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    padding-left: 25px;
+    position: relative; 
+    color: #555; 
+}
+
+.stats-box ul li::before {
+    content: '✓'; 
+    color: var(--color-accent); 
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 30px;
+}
+
+.stat-item {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.stat-number {
+    display: block; 
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--color-accent); 
+}
+
+.stat-label {
+    display: block; 
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* ----------------------------------------------------------------
+ * TEAM SECTION
+ * ---------------------------------------------------------------- */
+
+.team-section {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.team-members {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 50px auto 0 auto;
+}
+
+.member-card {
+    text-align: center;
+    width: 250px;
+}
+
+/* ⬅ تنسيق صور الفريق الجديدة (وسم <img>) ⬅ */
+.member-photo-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; 
+    margin: 0 auto 15px auto;
+    object-fit: cover; 
+    border: 5px solid var(--color-accent); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    display: block;
+}
+
+/* ----------------------------------------------------------------
+ * CTA BANNER
+ * ---------------------------------------------------------------- */
+.cta-banner {
+    background-color: var(--color-accent); 
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 1.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.cta-banner .secondary {
+    background-color: white;
+    color: var(--color-dark-text);
+    padding: 10px 25px;
+    font-size: 0.8em;
+    border: 2px solid white;
+}
+
+.cta-banner .secondary:hover {
+    background-color: #f0f0f0;
+}
+
+/* ----------------------------------------------------------------
+ * Responsive Adjustments
+ * ---------------------------------------------------------------- */
+@media (max-width: 992px) {
+    .team-members {
+        flex-direction: column;
+        align-items: center;
+    }
+    .stats-values-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .stats-box {
+        min-width: 80%;
+        margin-bottom: 30px;
+    }
+}
+@media (max-width: 576px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .cta-banner {
+        flex-direction: column;
+        font-size: 1.2em;
+    }
+}
+/* Footer */
+
+.footer {
+    background: #051923;
+    padding: 40px 20px;
+    font-family: "Cairo", sans-serif;
+    direction: ltr;
+    text-align: left;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.footer-col {
+    width: 30%;
+    min-width: 250px;
+}
+
+.footer-col h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.footer-col p {
+    color: #ddd;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin: 10px 0;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    opacity: 0.8;
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #ffffff;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-col {
+        width: 100%;
+    }
+}

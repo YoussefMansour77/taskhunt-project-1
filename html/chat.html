@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat | TaskHunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/chat.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="chat-topbar">
+  <a class="back-btn" id="backBtn" href="#"><i class="fas fa-arrow-left"></i></a>
+  <div class="chat-avatar" id="topAvatar"></div>
+  <div class="chat-info">
+    <div class="chat-name" id="topName">Select a conversation</div>
+    <div class="chat-post" id="topPost"></div>
+  </div>
+  <div class="chat-online" id="topOnline" style="display:none;">Online</div>
+  <button id="rateBtn" style="display:none;align-items:center;gap:5px;padding:6px 14px;background:#0077B8;color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;margin-left:auto;">⭐ Rate Freelancer</button>
+</div>
+
+<!-- Rating Modal -->
+<div id="rateModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;width:92%;max-width:400px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;">
+    <button onclick="closeRateModal()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888;">×</button>
+    <h3 style="margin:0 0 6px;color:#051923;">Rate this Freelancer</h3>
+    <p style="color:#6b7280;font-size:13px;margin:0 0 18px;">How was your experience working together?</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;font-size:36px;">
+      <span class="rate-star" style="cursor:pointer;color:#ddd;" onclick="setStars(1)">★</span>
+      <span class="rate-star" style="cursor:pointer;color:#ddd;" onclick="setStars(2)">★</span>
+      <span class="rate-star" style="cursor:pointer;color:#ddd;" onclick="setStars(3)">★</span>
+      <span class="rate-star" style="cursor:pointer;color:#ddd;" onclick="setStars(4)">★</span>
+      <span class="rate-star" style="cursor:pointer;color:#ddd;" onclick="setStars(5)">★</span>
+    </div>
+    <textarea id="rateComment" rows="3" placeholder="Leave a comment (optional)…"
+      style="width:100%;padding:10px 12px;border:1.5px solid #e2eaf0;border-radius:8px;font-family:inherit;font-size:14px;resize:none;outline:none;box-sizing:border-box;margin-bottom:12px;"
+      onfocus="this.style.borderColor='#0077B8'" onblur="this.style.borderColor='#e2eaf0'"></textarea>
+    <p id="rateError" style="color:#ef4444;font-size:13px;margin-bottom:10px;display:none;"></p>
+    <button onclick="submitRating()" style="width:100%;padding:12px;background:#0077B8;color:#fff;border:none;border-radius:25px;font-weight:700;cursor:pointer;font-size:15px;">Submit Rating</button>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="chat-body">
+
+  <!-- Sidebar: conversation list -->
+  <div class="conv-sidebar" id="convSidebar">
+    <div class="conv-sidebar-header">Messages</div>
+    <div class="conv-list" id="convList"><p style="padding:20px;color:#9ab;font-size:14px;">Loading…</p></div>
+  </div>
+
+  <!-- Main chat area -->
+  <div class="chat-main" id="chatMain">
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-empty">
+        <div class="empty-icon">💬</div>
+        <p>Select a conversation to start chatting</p>
+      </div>
+    </div>
+
+    <div class="chat-input-bar" id="inputBar" style="display:none;">
+      <textarea id="msgInput" placeholder="Type a message…" rows="1" onkeydown="handleKey(event)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="/assets/js/navbar.js"></script>
+<script>
+if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+const me = Auth.user();
+
+let activeConv       = null; // { id, conv_type: 'proposal'|'direct' }
+let pollInterval     = null;
+let lastMsgId        = 0;
+let allConversations = [];
+
+const urlParams = new URLSearchParams(window.location.search);
+const initType  = urlParams.get('type') || 'proposal';
+const initId    = urlParams.get('id') ? Number(urlParams.get('id')) : null;
+
+document.getElementById('backBtn').href = me.role === 'client' ? 'dashboard/dash-client.html' : 'dashboard/freelancer.html';
+
+// Route helpers
+const msgUrl = (type, id) => type === 'direct' ? `/api/chat/direct/${id}/messages` : `/api/chat/${id}/messages`;
+const authHdr = () => ({ 'Authorization': 'Bearer ' + Auth.token() });
+
+// ── Load all conversations (proposal + direct) ────────────────────
+async function loadConversations() {
+  try {
+    const [r1, r2] = await Promise.all([
+      fetch('/api/chat/conversations', { headers: authHdr() }),
+      fetch('/api/chat/direct',        { headers: authHdr() })
+    ]);
+    const [pc, dc] = await Promise.all([r1.json(), r2.json()]);
+
+    const taggedP = pc.map(c => ({
+      ...c, conv_type: 'proposal',
+      other_name:   me.role === 'client' ? c.freelancer_name  : c.client_name,
+      other_avatar: me.role === 'client' ? c.freelancer_avatar : null
+    }));
+
+    allConversations = [...taggedP, ...dc].sort((a, b) =>
+      new Date(b.last_message_at || b.created_at) - new Date(a.last_message_at || a.created_at)
+    );
+
+    renderSidebar();
+    if (initId) {
+      const conv = allConversations.find(c => c.id === initId && c.conv_type === initType);
+      if (conv) openConversation(conv);
+    }
+  } catch(e) {
+    document.getElementById('convList').innerHTML = '<p style="padding:20px;color:#e00;font-size:14px;">Failed to load</p>';
+  }
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────
+function renderSidebar() {
+  const list = document.getElementById('convList');
+  if (!allConversations.length) {
+    list.innerHTML = '<p style="padding:20px;color:#9ab;font-size:14px;text-align:center;">No conversations yet.</p>';
+    return;
+  }
+  list.innerHTML = allConversations.map((c, i) => {
+    const isActive = activeConv && activeConv.id === c.id && activeConv.conv_type === c.conv_type;
+    const name = c.other_name || 'User';
+    const ini  = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const avatarHtml = c.other_avatar
+      ? `<img src="${c.other_avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+      : ini;
+    const lastMsg = c.last_message ? c.last_message.slice(0, 38) + (c.last_message.length > 38 ? '…' : '') : 'No messages yet';
+    const unread  = c.unread_count > 0 ? `<span class="conv-unread">${c.unread_count}</span>` : '';
+    const sub     = c.conv_type === 'proposal'
+      ? `<div class="conv-time" style="color:#0077B8;font-size:10px;">📋 ${c.post_title || 'Job'}</div>`
+      : `<div class="conv-time" style="color:#22c55e;font-size:10px;">💬 Direct Message</div>`;
+    return `
+      <div class="conv-item ${isActive ? 'active' : ''}" onclick="openConvByIndex(${i})">
+        <div class="conv-avatar">${avatarHtml}</div>
+        <div class="conv-info">
+          <div class="conv-name">${name}</div>
+          <div class="conv-last">${lastMsg}</div>
+          ${sub}
+        </div>
+        ${unread}
+      </div>`;
+  }).join('');
+}
+
+function openConvByIndex(i) { openConversation(allConversations[i]); }
+
+// ── Open conversation ─────────────────────────────────────────────
+async function openConversation(conv) {
+  if (pollInterval) clearInterval(pollInterval);
+  activeConv = { id: conv.id, conv_type: conv.conv_type };
+  lastMsgId  = 0;
+
+  renderSidebar();
+  window.history.replaceState({}, '', `?type=${conv.conv_type}&id=${conv.id}`);
+
+  const name = conv.other_name || 'User';
+  const ini  = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  document.getElementById('topName').textContent = name;
+  document.getElementById('topPost').textContent = conv.conv_type === 'proposal' ? `Re: ${conv.post_title || 'Job'}` : 'Direct Message';
+  document.getElementById('topOnline').style.display = 'flex';
+  document.getElementById('topAvatar').innerHTML = conv.other_avatar
+    ? `<img src="${conv.other_avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+    : ini;
+
+  document.getElementById('inputBar').style.display = 'flex';
+  checkAndShowRateBtn(activeConv);
+  await loadMessages(true);
+  pollInterval = setInterval(pollMessages, 3000);
+}
+
+// ── Load messages ─────────────────────────────────────────────────
+async function loadMessages(scroll = false) {
+  if (!activeConv) return;
+  const box = document.getElementById('chatMessages');
+  box.innerHTML = '<div style="text-align:center;padding:30px;color:#9ab;font-size:14px;">Loading…</div>';
+  try {
+    const res  = await fetch(msgUrl(activeConv.conv_type, activeConv.id), { headers: authHdr() });
+    const msgs = await res.json();
+    lastMsgId  = msgs.length ? msgs[msgs.length - 1].id : 0;
+    box.innerHTML = msgs.length
+      ? renderMessages(msgs)
+      : '<div class="chat-empty"><div class="empty-icon">👋</div><p>Say hello! Start the conversation.</p></div>';
+    if (scroll) box.scrollTop = box.scrollHeight;
+    refreshSidebarSilent();
+  } catch(e) { box.innerHTML = '<div class="chat-empty"><p>Failed to load messages.</p></div>'; }
+}
+
+// ── Poll for new messages ─────────────────────────────────────────
+async function pollMessages() {
+  if (!activeConv) return;
+  try {
+    const res  = await fetch(msgUrl(activeConv.conv_type, activeConv.id), { headers: authHdr() });
+    const msgs = await res.json();
+    if (!msgs.length || msgs[msgs.length - 1].id <= lastMsgId) return;
+    const box     = document.getElementById('chatMessages');
+    const newMsgs = msgs.filter(m => m.id > lastMsgId);
+    lastMsgId     = msgs[msgs.length - 1].id;
+    const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+    if (box.querySelector('.chat-empty')) box.innerHTML = '';
+    box.insertAdjacentHTML('beforeend', renderMessages(newMsgs));
+    if (atBottom) box.scrollTop = box.scrollHeight;
+    refreshSidebarSilent();
+  } catch(_) {}
+}
+
+// ── Silent sidebar refresh ────────────────────────────────────────
+async function refreshSidebarSilent() {
+  try {
+    const [r1, r2] = await Promise.all([
+      fetch('/api/chat/conversations', { headers: authHdr() }),
+      fetch('/api/chat/direct',        { headers: authHdr() })
+    ]);
+    const [pc, dc] = await Promise.all([r1.json(), r2.json()]);
+    const taggedP = pc.map(c => ({
+      ...c, conv_type: 'proposal',
+      other_name:   me.role === 'client' ? c.freelancer_name  : c.client_name,
+      other_avatar: me.role === 'client' ? c.freelancer_avatar : null
+    }));
+    allConversations = [...taggedP, ...dc].sort((a, b) =>
+      new Date(b.last_message_at || b.created_at) - new Date(a.last_message_at || a.created_at)
+    );
+    renderSidebar();
+  } catch(_) {}
+}
+
+// ── Render messages HTML ──────────────────────────────────────────
+function renderMessages(msgs) {
+  let html = '', lastDate = null;
+  msgs.forEach(msg => {
+    const d = new Date(msg.created_at);
+    const dateStr = d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+    if (dateStr !== lastDate) { html += `<div class="date-divider"><span>${dateStr}</span></div>`; lastDate = dateStr; }
+    const isMine   = msg.sender_id === me.id;
+    const time     = d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+    const avatarHtml = msg.sender_avatar
+      ? `<img src="${msg.sender_avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+      : (msg.sender_name||'U').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    html += `
+      <div class="msg-group ${isMine ? 'mine' : 'theirs'}">
+        <div class="msg-avatar" style="cursor:pointer;" onclick="if(typeof showUserProfile==='function') showUserProfile(${msg.sender_id})">${avatarHtml}</div>
+        <div>
+          <div class="msg-bubble">${escHtml(msg.body)}</div>
+          <div class="msg-time">${time}</div>
+        </div>
+      </div>`;
+  });
+  return html;
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+// ── Rating system ─────────────────────────────────────────────────
+async function checkAndShowRateBtn(conv) {
+  const rateBtn = document.getElementById('rateBtn');
+  if (!rateBtn) return;
+  if (conv.conv_type !== 'proposal' || me.role !== 'client') { rateBtn.style.display = 'none'; return; }
+  try {
+    const res  = await fetch(`/api/reviews/check/${conv.id}`, { headers: authHdr() });
+    const data = await res.json();
+    if (data.reviewed) {
+      rateBtn.textContent = `⭐ Rated ${data.review.rating}/5`;
+      rateBtn.style.cssText = 'display:inline-flex;align-items:center;gap:5px;padding:6px 14px;background:#f59e0b;color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:default;opacity:.8;';
+      rateBtn.onclick = null;
+    } else {
+      rateBtn.style.display = 'inline-flex';
+      rateBtn.onclick = openRateModal;
+    }
+  } catch(_) { rateBtn.style.display = 'none'; }
+}
+
+function openRateModal() {
+  document.getElementById('rateModal').style.display = 'flex';
+  document.getElementById('rateError').style.display = 'none';
+  document.getElementById('rateComment').value = '';
+  setStars(0);
+}
+function closeRateModal() {
+  document.getElementById('rateModal').style.display = 'none';
+}
+
+let selectedRating = 0;
+function setStars(n) {
+  selectedRating = n;
+  document.querySelectorAll('.rate-star').forEach((s, i) => {
+    s.style.color = i < n ? '#f59e0b' : '#ddd';
+  });
+}
+
+async function submitRating() {
+  if (!selectedRating) { document.getElementById('rateError').textContent = 'Please select a star rating.'; document.getElementById('rateError').style.display = 'block'; return; }
+  const comment = document.getElementById('rateComment').value.trim();
+  const conv    = allConversations.find(c => c.id === activeConv.id && c.conv_type === activeConv.conv_type);
+  if (!conv) return;
+  const freelancerId = conv.freelancer_id;
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...authHdr() },
+      body: JSON.stringify({ freelancer_id: freelancerId, conversation_id: activeConv.id, rating: selectedRating, comment })
+    });
+    const data = await res.json();
+    if (!res.ok) { document.getElementById('rateError').textContent = data.error || 'Failed'; document.getElementById('rateError').style.display = 'block'; return; }
+    closeRateModal();
+    checkAndShowRateBtn(activeConv);
+  } catch(_) { document.getElementById('rateError').textContent = 'Failed to submit.'; document.getElementById('rateError').style.display = 'block'; }
+}
+
+// ── Send message ──────────────────────────────────────────────────
+async function sendMessage() {
+  if (!activeConv) return;
+  const input = document.getElementById('msgInput');
+  const body  = input.value.trim();
+  if (!body) return;
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+  input.value  = '';
+  input.style.height = 'auto';
+  try {
+    await fetch(msgUrl(activeConv.conv_type, activeConv.id), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...authHdr() },
+      body: JSON.stringify({ body })
+    });
+    await loadMessages(true);
+    refreshSidebarSilent();
+  } catch(e) { input.value = body; alert('Failed to send.'); }
+  finally { btn.disabled = false; input.focus(); }
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  setTimeout(() => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 110) + 'px'; }, 0);
+}
+
+loadConversations();
+</script>
+</body>
+</html>

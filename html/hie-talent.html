@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Hire Talent - TaskHunt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+         :root {
+            --primary: #0077b8;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --primary-blue: #4A90E2;
+            --dark-blue: #2C3E50;
+            --light-bg: #f8fafc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+ /* ===== NAVBAR ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;         
+    padding: 0 5%;        /* عشان ميبقاش لازق في الجوانب */
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    
+    /* أمان إضافي */
+    box-sizing: border-box;
+    overflow: hidden;    /* يمنع أي حاجة بداخل الناف بار إنها تمطه */
+}
+
+.logo {
+    height: 100%;        /* خلي حاوية اللوجو تاخد طول الناف بار */
+    display: flex;
+    align-items: center; /* سنتر اللوجو عمودياً */
+}
+
+.logo a {
+    display: flex;       /* يمنع وجود مسافات غريبة تحت اللينك */
+    align-items: center;
+    height: 100%;
+}
+
+.logo img {
+    
+    height: 145px;    
+    width: auto;         
+    display: block;
+    object-fit: contain;
+    margin-right: 50px;
+    margin-bottom: 25px;
+}
+ .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+         }
+
+    .nav-links li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links li a:hover {
+            color: #007bff;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+
+        .login {
+            background: #f0f6ff;
+            color:#0077B8;
+        }
+
+        .login:hover {
+            background: #e0edff;
+        }
+
+        .signup {
+            background: #0077B8;
+            color: white;
+        }
+
+        .signup:hover {
+            background: #0077B8;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .mobile-auth {
+            display: none;
+        }
+
+        /* HERO SECTION */
+        .hero-section {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 35px;
+            padding: 10px 24px 40px;
+        }
+
+        .hero-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 40px 54px;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.06);
+            max-width: 1400px;
+            width: 100%;
+            gap: 48px;
+        }
+
+        .hero-left {
+            flex: 1.4;
+            text-align: left;
+        }
+
+        .hero-content h1 {
+            font-size: 3.2rem;
+            color: var(--dark-blue);
+            margin-bottom: 18px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .hero-content h1 span {
+            color: var(--primary-blue);
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: #5a6874;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        /* search box */
+        .search-box-container {
+            max-width: 520px;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            background: #ffffff;
+            padding: 5px;
+            border-radius: 80px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .search-input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 14px 24px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .search-btn:hover {
+            background: #051923;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .action-btn.blue {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .action-btn.outline {
+            background: #f0f6ff;
+            color: var(--dark-blue);
+            border: 1px solid #dce5f2;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 540px;
+            height: auto;
+        }
+
+        /* FILTER BAR */
+        .filter-bar {
+            padding: 20px 20px 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .filter-container {
+            background: #fff;
+            padding: 16px 28px;
+            border-radius: 60px;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+            border: 1px solid var(--border);
+        }
+
+        .filter-container select {
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: 1px solid #d1d9e8;
+            background: white;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* LAYOUT */
+        .page-layout {
+            display: flex;
+            gap: 32px;
+            max-width: 1280px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: white;
+            border-radius: 28px;
+            padding: 20px 10px 20px 18px;
+            border: 1px solid #eef2f8;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 18px;
+            margin-bottom: 18px;
+            color: #0f172a;
+            font-weight: 600;
+            padding-left: 8px;
+        }
+
+        .category {
+            margin-bottom: 12px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .category-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 12px 8px;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+
+        .category-btn:hover {
+            color: var(--primary);
+        }
+
+        .sub-categories {
+            list-style: none;
+            padding-left: 20px;
+            margin: 6px 0 12px;
+            display: none;
+        }
+
+        .category.active .sub-categories {
+            display: block;
+        }
+
+        .sub-categories li a {
+            text-decoration: none;
+            color: #5b6e8c;
+            font-size: 13px;
+            display: block;
+            padding: 6px 0;
+            transition: 0.2s;
+        }
+
+        .sub-categories li a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .arrow {
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+
+        .category.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .up-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-radius: 28px;
+            padding: 24px 28px;
+            border: 1px solid var(--border);
+            transition: all 0.25s;
+            width: 100%;
+        }
+
+        .up-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .card-left {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .avatar-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-info h3 {
+            margin: 0 0 6px 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-info h3::after {
+            content: '✓';
+            background: #4A90E2;
+            color: #fff;
+            font-size: 11px;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .role {
+            font-size: 0.9rem;
+            color: #334155;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .category-tag {
+            font-size: 12px;
+            color: var(--primary);
+            background: #eef6ff;
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            margin: 6px 0 5px;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: #5b6e8c;
+            margin-top: 5px;
+        }
+
+        .meta span {
+            color: #f5a623;
+            font-weight: bold;
+        }
+
+        .card-right {
+            text-align: right;
+        }
+
+        .hours {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .hours span {
+            font-size: 14px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .view-profile-btn {
+            margin-top: 16px;
+            padding: 8px 26px;
+            border: 1.5px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .view-profile-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .view-more {
+            display: block;
+            margin: 32px auto 20px;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            width: fit-content;
+        }
+
+        /* CTA FIXED */
+        .cta-fixed {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            padding: 12px 32px;
+            border-radius: 80px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            z-index: 1000;
+            border: 1px solid var(--primary);
+            backdrop-filter: blur(2px);
+
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .cta-fixed p {
+            margin: 0;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .cta-fixed button {
+            background: var(--primary);
+            border: none;
+            padding: 8px 22px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+
+        /* FOOTER */
+        .footer {
+            background: #051923;
+            padding: 48px 32px 24px;
+            font-family: "Inter", sans-serif;
+            color: #ffffff;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a {
+            text-decoration: none;
+            color: #adb5bd;
+            transition: 0.2s;
+        }
+
+        .footer-col ul li a:hover {
+            color: white;
+            padding-left: 4px;
+        }
+
+        .footer-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: #fff;
+            margin-bottom: 14px;
+            outline: none;
+        }
+
+        .footer-btn {
+            width: 100%;
+            padding: 12px;
+            background: #00a8e8;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 28px;
+            height: 28px;
+            filter: brightness(0) invert(1);
+            opacity: 0.7;
+            transition: 0.2s;
+        }
+
+        .social-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: #8e9aaf;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero-wrapper { padding: 32px 32px; gap: 30px; }
+            .hero-content h1 { font-size: 2.4rem; }
+            .page-layout { flex-direction: column; }
+            .sidebar { width: 100%; position: static; margin-bottom: 10px; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+                gap: 20px;
+                z-index: 99;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .auth-buttons {
+                display: none;
+            }
+            .mobile-auth {
+                display: flex;
+                gap: 12px;
+                margin-top: 10px;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .hero-wrapper {
+                flex-direction: column;
+                text-align: center;
+                padding: 32px 20px;
+            }
+            .hero-left { text-align: center; order: 2; }
+            .hero-image { order: 1; margin-bottom: 20px; }
+            .hero-buttons { justify-content: center; }
+            .up-card { flex-direction: column; text-align: center; gap: 16px; }
+            .card-left { flex-direction: column; text-align: center; }
+            .card-right { text-align: center; border-top: 1px solid #eef2f8; padding-top: 16px; width: 100%; }
+            .filter-container { border-radius: 32px; padding: 16px 20px; gap: 12px; }
+            .cta-fixed { padding: 8px 20px; gap: 12px; font-size: 13px; white-space: nowrap; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 1.9rem; }
+            .search-input-wrapper { flex-direction: column; background: white; border-radius: 32px; padding: 8px; gap: 8px; }
+            .search-btn { border-radius: 40px; width: 100%; }
+            .cta-fixed { width: 90%; justify-content: center; gap: 8px; flex-wrap: wrap; white-space: normal; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <a href="home.html">
+            <img src="../assets/images/logo.png" ">
+        </a>
+    </div>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="work.html">Find Work</a></li>
+        <li><a href="hie-talent.html">Hire Talent</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#contact-section">Contact</a></li>
+        <li class="mobile-auth">
+            <button onclick="location.href='login.html'" class="btn login">Login</button>
+            <button onclick="location.href='signup/ask-signup.html'" class="btn signup">Sign Up</button>
+        </li>
+    </ul>
+    <div class="auth-buttons">
+        <button id="nav-login" onclick="location.href='login.html'" class="btn login">Login</button>
+        <button id="nav-signup" onclick="location.href='signup/ask-signup.html'" class="btn signup">Sign Up</button>
+        <div id="nav-user" style="display:none;align-items:center;gap:14px;">
+            <!-- Bell -->
+            <div style="position:relative;cursor:pointer;" onclick="window.location.href='dashboard/dash-client.html'">
+              <i class="fa-solid fa-bell" style="font-size:20px;color:#555;"></i>
+              <span id="notifCount" style="display:none;position:absolute;top:-5px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;padding:0 4px;align-items:center;justify-content:center;"></span>
+            </div>
+            <!-- Messages -->
+            <div id="msgIconWrap" style="position:relative;cursor:pointer;" onclick="toggleMsgDropdown(event)">
+              <i class="fa-solid fa-comment-dots" style="font-size:20px;color:#555;"></i>
+              <span id="msgCount" style="display:none;position:absolute;top:-5px;right:-6px;background:#22c55e;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;padding:0 4px;align-items:center;justify-content:center;"></span>
+              <div id="msgDropdown" style="display:none;position:absolute;top:40px;right:-10px;width:300px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;border:1px solid #eee;overflow:hidden;">
+                <div style="padding:12px 16px;font-weight:700;font-size:14px;border-bottom:1px solid #eee;color:#051923;">Messages</div>
+                <div id="msgDropList" style="max-height:280px;overflow-y:auto;"></div>
+                <a href="chat.html" style="display:block;text-align:center;padding:11px;color:#0077B8;font-size:13px;font-weight:600;border-top:1px solid #eee;text-decoration:none;">See All Messages →</a>
+              </div>
+            </div>
+            <span id="nav-username" style="font-weight:600;color:#0077B8;"></span>
+            <button class="btn login" onclick="Auth.logout()">Logout</button>
+        </div>
+    </div>
+    <div class="menu-toggle" id="menuToggle">☰</div>
+</nav>
+
+<section class="hero-section">
+    <div class="hero-wrapper">
+        <div class="hero-left">
+            <div class="hero-content">
+                <h1>Hire Top <span>Freelancers</span><br>For Your Project</h1>
+                <p>Post a job and connect with skilled professionals in minutes.</p>
+            </div>
+            <div class="search-box-container">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Look for a skill, a programming language..." id="searchKeyword">
+                    <button class="search-btn" id="searchBtn">Search</button>
+                </div>
+                <div class="hero-buttons">
+                    <a href="post-a-job.html"><button class="action-btn blue">Post a Job</button></a>
+                    <button class="action-btn outline" id="browseBtn">Browse Freelancers</button>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="../assets/images/hero-illustration.png" alt="Hero Illustration" onerror="this.src='https://placehold.co/500x400?text=Talent+Hiring'">
+        </div>
+    </div>
+</section>
+
+<div class="filter-bar">
+    <div class="filter-container">
+        <select id="typeFilter">
+            <option value="all">All Categories</option>
+            <option value="Data & AI">Data & AI</option>
+            <option value="Development & IT">Development & IT</option>
+            <option value="Design & Creative">Design & Creative</option>
+            <option value="Sales & Marketing">Sales & Marketing</option>
+            <option value="Writing & Translation">Writing & Translation</option>
+            <option value="Admin & Support">Admin & Support</option>
+            <option value="Finance & Accounting">Finance & Accounting</option>
+            <option value="Legal">Legal</option>
+            <option value="HR & Training">HR & Training</option>
+            <option value="Engineering & Architecture">Engineering & Architecture</option>
+        </select>
+        <select id="priceFilter">
+            <option value="all">All Prices</option>
+            <option value="0-30">0 - 30$/hr</option>
+            <option value="31-40">31 - 40$/hr</option>
+            <option value="41-50">41 - 50$/hr</option>
+        </select>
+        <select id="expFilter">
+            <option value="all">All Experience</option>
+            <option value="0-2">0 - 2 yrs</option>
+            <option value="3-5">3 - 5 yrs</option>
+            <option value="6-100">6+ yrs</option>
+        </select>
+    </div>
+</div>
+
+<div class="page-layout">
+    <aside class="sidebar">
+        <h3>Categories</h3>
+        <!-- Data & AI -->
+        <div class="category"><button class="category-btn">Data & AI <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../AI/Data Analysis & Visualization.html">Data Analysis & Visualization</a></li><li><a href="../AI/Al Developers.html">AI Developers</a></li><li><a href="../AI/Machine Learning Models.html">Machine Learning Models</a></li><li><a href="../AI/Al Chatbots & Automations.html">AI Chatbots & Automations</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Development & IT <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../Development&it/dotnet.html">.NET Developers</a></li><li><a href="../Development&it/Full Stack.html">Full Stack Engineers</a></li><li><a href="../Development&it/DevOps.html">DevOps Engineers</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Design & Creative <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../Design&Creative/Graphic Designers/Graphic Designers.html">Graphic Designers</a></li><li><a href="../Design&Creative/UX Designers/UX Designers.html">UX Designers</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Sales & Marketing <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../sales/Digital_Marketers.html">Digital Marketers</a></li><li><a href="../sales/Facebook_Ads_Specialists.html">Facebook Ads Specialists</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Writing & Translation <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../Writing & Translation/creative writers.html">Creative Writers</a></li><li><a href="../Writing & Translation/EnglishToSpanish.html">English to Spanish Translators</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Admin & Support <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../Admin & Support Specialties/Personal Assistants.html">Personal Assistants</a></li><li><a href="../Admin & Support Specialties/Microsoft Excel Experts.html">Excel Experts</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Finance & Accounting <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../Finance & Accounting/Financial Analysts.html">Financial Analysts</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Legal <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../Corporate law/corporate.html">Corporate Law</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">HR & Training <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../HR/tech-recruitment.html">Technical Recruiters</a></li></ul>
+        </div>
+        <div class="category"><button class="category-btn">Engineer & Architecture <span class="arrow">›</span></button>
+            <ul class="sub-categories"><li><a href="../Engineering & Architecture/Interior Architects.html">Interior Architects</a></li></ul>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <!-- cards will be within sections -->
+        <div id="cardsContainer"></div>
+        <button class="view-more" id="loadMoreBtn">View More</button>
+    </main>
+</div>
+
+<div class="cta-fixed" id="ctaFixed">
+    <p>Can't find the right talent?</p>
+    <a href="post-a-job.html"><button>Post a Project</button></a>
+</div>
+
+<!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Task Hunt</h3>
+                <ul>
+                    <li><a href="#">About Task Hunt</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Rights Protection</a></li>
+                </ul>
+                <div class="social-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="social-icon"
+                            alt="Facebook">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="social-icon"
+                            alt="Instagram">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="social-icon"
+                            alt="TikTok">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="social-icon"
+                            alt="Twitter">
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Community</h3>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Discussions</a></li>
+                    <li><a href="#">Topics</a></li>
+                </ul>
+            </div>
+
+            <div id="contact-section" class="footer-col contact-col">
+                <div class="contact-box">
+                    <form id="contactForm">
+                        <h3>Drop us a message</h3>
+                        <div class="form-group">
+                            <input type="text" class="footer-input" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="footer-input" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="footer-input" rows="3" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="footer-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Task Hunt — All rights reserved</p>
+        </div>
+    </footer>
+
+<script>
+    let allFreelancers = [];
+    let visibleCount = 4;
+    let filteredList = [];
+
+    function renderCards() {
+        const container = document.getElementById("cardsContainer");
+        if (!container) return;
+        container.innerHTML = "";
+        if (filteredList.length === 0) {
+            container.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">No freelancers found. Try changing your filters.</div>';
+            const lb = document.getElementById("loadMoreBtn");
+            if (lb) lb.style.display = "none";
+            return;
+        }
+        filteredList.slice(0, visibleCount).forEach(f => {
+            const card = document.createElement("div");
+            card.className = "up-card";
+            const avatarSrc = f.avatar || ('https://placehold.co/80x80?text=' + encodeURIComponent((f.name || 'F').charAt(0)));
+            card.innerHTML = `
+                <div class="card-left">
+                    <img src="${avatarSrc}" class="avatar-img" onerror="this.src='https://placehold.co/80x80?text=F'" style="cursor:pointer;" onclick="showUserProfile(${f.user_id||f.id})">
+                    <div class="card-info">
+                        <h3 style="cursor:pointer;color:#0077B8;" onclick="showUserProfile(${f.user_id||f.id})">${f.name || 'Freelancer'}</h3>
+                        <div class="role">${f.title || ''}</div>
+                        <div class="category-tag">${f.category || ''}</div>
+                        <div class="meta"><span>⭐ ${f.rating || 4.5}</span> | Exp: ${f.experience_years || 0} yrs</div>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <div class="hours">$${f.hourly_rate || '?'} <span>/hr</span></div>
+                    <button class="view-profile-btn" onclick="showUserProfile(${f.user_id||f.id})">View Profile</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        const loadBtn = document.getElementById("loadMoreBtn");
+        if (loadBtn) loadBtn.style.display = visibleCount >= filteredList.length ? "none" : "block";
+    }
+
+    function filterAndRender() {
+        const typeVal   = document.getElementById("typeFilter").value;
+        const priceVal  = document.getElementById("priceFilter").value;
+        const expVal    = document.getElementById("expFilter").value;
+        const searchVal = document.getElementById("searchKeyword")?.value.toLowerCase().trim() || "";
+
+        filteredList = allFreelancers.filter(f => {
+            if (typeVal !== "all" && f.category !== typeVal) return false;
+            if (priceVal !== "all") {
+                const [min, max] = priceVal.split("-").map(Number);
+                if ((f.hourly_rate || 0) < min || (f.hourly_rate || 0) > max) return false;
+            }
+            if (expVal !== "all") {
+                const [min, max] = expVal.split("-").map(Number);
+                if ((f.experience_years || 0) < min || (f.experience_years || 0) > max) return false;
+            }
+            if (searchVal &&
+                !f.name.toLowerCase().includes(searchVal) &&
+                !(f.title || '').toLowerCase().includes(searchVal) &&
+                !(f.category || '').toLowerCase().includes(searchVal)) return false;
+            return true;
+        });
+        visibleCount = 4;
+        renderCards();
+    }
+
+    function loadMore() { visibleCount += 4; renderCards(); }
+
+    async function init() {
+        const container = document.getElementById("cardsContainer");
+        container.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">Loading...</div>';
+        try {
+            const res = await fetch('/api/freelancers?limit=500');
+            allFreelancers = await res.json();
+        } catch (e) {
+            container.innerHTML = '<div style="padding:2rem;text-align:center;color:#e00;">Failed to load. Is the server running?</div>';
+            return;
+        }
+        filterAndRender();
+    }
+
+    // Event listeners
+    document.getElementById("typeFilter").addEventListener("change", filterAndRender);
+    document.getElementById("priceFilter").addEventListener("change", filterAndRender);
+    document.getElementById("expFilter").addEventListener("change", filterAndRender);
+    document.getElementById("searchBtn").addEventListener("click", filterAndRender);
+    document.getElementById("browseBtn").addEventListener("click", () => window.scrollTo({ top: document.querySelector(".page-layout").offsetTop - 30, behavior: "smooth" }));
+    document.getElementById("loadMoreBtn").addEventListener("click", loadMore);
+    document.getElementById("searchKeyword")?.addEventListener("keypress", (e) => { if (e.key === "Enter") filterAndRender(); });
+
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            btn.parentElement.classList.toggle('active');
+        });
+    });
+
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks   = document.getElementById("navLinks");
+    if (menuToggle) menuToggle.onclick = () => navLinks.classList.toggle("active");
+
+    const cta = document.querySelector('.cta-fixed');
+    const footerElem = document.querySelector('footer');
+    window.addEventListener('scroll', () => {
+        if (!footerElem || !cta) return;
+        const scrollY = window.scrollY;
+        if (scrollY > 200) { cta.style.opacity = "1"; cta.style.pointerEvents = "auto"; }
+        else                { cta.style.opacity = "0"; cta.style.pointerEvents = "none"; }
+        const footerRect = footerElem.getBoundingClientRect();
+        const winH = window.innerHeight;
+        if (footerRect.top < winH) { cta.style.bottom = (winH - footerRect.top + 20) + "px"; }
+        else                       { cta.style.bottom = "24px"; }
+    });
+
+    document.getElementById("contactForm")?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("Message sent! We'll get back soon.");
+        e.target.reset();
+    });
+
+    init();
+</script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/navbar.js"></script>
+</body>
+</html>

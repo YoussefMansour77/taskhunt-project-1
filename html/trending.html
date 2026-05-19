@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Tasks</title>
+    <style>
+        :root {
+  --c1: #00A8FF;
+  --c2: #0090E0;
+  --c3: #0077B8;
+  --c4: #051923;
+  --c5: #ffffff;
+  --white: #ffffff;
+  --light: #e6f7ff;
+  
+}
+body{
+    background: #f7f9fc;
+    margin:0;
+}
+  
+ /* NAVBAR */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 30px;
+  height: 50px;
+  background: #ffffff;
+}
+/* NAVBAR FIX */
+
+.logo img {
+  height: 180px;
+  align-items: center;
+  padding-bottom: 25px;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+nav ul li a {
+  color: var(--c4);
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+}
+nav ul li a:hover {
+  color: var(--c3);
+}
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); 
+}
+.nav-links li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+/* BUTTONS */
+
+.auth-buttons .btn {
+    width: 90px; 
+    height: 35px;
+    padding: 8px 0; 
+    text-align: center;
+    display: inline-block;
+    border-radius: 8px; 
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.login-blue {
+    background-color: #f0f6ff;
+    color: white;
+    border: none;
+}
+/* LOGIN BUTTON */
+
+.login-btn {
+    background-color: transparent;
+    color: var(--c3);
+    
+}
+.auth-buttons .btn:hover {
+    opacity: 0.8;
+    transform: translateY(-0.5px);
+}
+.signup-blue {
+  background-color: var(--c3);
+  color: white;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+.user-menu-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* المسافة بين الجرس والبروفايل */
+}
+
+.nav-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--c3);
+    transition: 0.3s ease;
+}
+
+.nav-avatar:hover {
+    transform: translateY(-3px);
+}
+
+.profile-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* القائمة اللي بتفتح لما اقرب   من البروفايل */
+.nav-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    min-width: 140px;
+    z-index: 1000;
+}
+
+.profile-wrapper:hover .nav-dropdown {
+    display: block;
+}
+
+.nav-dropdown a {
+    display: block;
+    padding: 10px 15px;
+    color: var(--c4);
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-dropdown a:last-child { border: none; }
+
+.nav-dropdown a:hover {
+    background: #f8f9fa;
+    color: var(--c3);
+}
+
+/* ستايل الجرس والتنبيهات */
+.notifications {
+    position: relative;
+    font-size: 20px;
+    color: var(--c4);
+    cursor: pointer;
+}
+
+/* ت(Bell Wobble Animation) */
+.animated-bell:hover .bell-icon {
+    animation: bell-wobble 0.6s ease-in-out infinite; /* سرعة ونوع الحركة */
+}
+
+.bell-dot {
+    position: absolute;
+    bottom: -3px;
+    right: 50%; 
+    transform: translateX(50%);
+    font-size: 6px; /* حجم النقطة */
+    color: var(--c4); 
+}
+
+/* الاهتزاز */
+@keyframes bell-wobble {
+    0% { transform: rotate(0deg); }
+    15% { transform: rotate(10deg); }
+    30% { transform: rotate(-10deg); }
+    45% { transform: rotate(5deg); }
+    60% { transform: rotate(-5deg); }
+    75% { transform: rotate(2deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.trending-pro{
+  padding:80px 40px;
+
+}
+
+.trending-header h2{
+  font-size:32px;
+  font-weight:800;
+  color:#0b2545;
+  margin-bottom:30px;
+  text-align:center;
+}
+
+.trending-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:30px;
+}
+
+.task-card{
+  background:white;
+  padding:24px;
+  border-radius:18px;
+  box-shadow:0 10px 28px rgba(11,37,69,0.08);
+  transition:.3s;
+  border-top:4px solid #2ea3f2;
+}
+
+.task-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 18px 38px rgba(11,37,69,0.15);
+}
+
+.task-top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+
+.task-category{
+  background:#eef5ff;
+  color:#007bff;
+  padding:4px 14px;
+  border-radius:50px;
+  font: size 14px;
+  font-weight:600;
+}
+
+.task-price{
+  font-weight:800;
+  color:#0b2545;
+}
+
+.task-card h3{
+  margin:10px 0;
+  color:#0b2545;
+  font-size: 22px;
+}
+
+.task-desc{
+  color:#555;
+  font-size:18px;
+  line-height:1.5;
+}
+
+.task-info{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  font-size:18px;
+  color:#6b7280;
+}
+
+.task-skills{
+  margin-top:14px;
+}
+
+.task-skills span{
+  display:inline-block;
+  background:#e8f3ff;    
+  color:#0b2545;          
+  padding:7px 12px;
+  border-radius:8px;
+  font-size:12px;
+  margin:4px 4px 0 0;
+  font-weight:600;
+}
+
+.task-footer{
+  margin-top:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.client{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.client strong{
+  color:#0b2545;
+  font-size:14px;
+}
+.client img{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.stars {
+  --star-size: 16px;
+  --star-color: #ddd;
+  --star-fill: #ffc107;
+  
+  position: relative;
+  display: inline-block;
+  font-size: var(--star-size);
+  line-height: 1;
+}
+
+.stars::before {
+  content: "★★★★★";
+  letter-spacing: 2px;
+  color: var(--star-color);
+}
+
+.stars::after {
+  content: "★★★★★";
+  letter-spacing: 2px;
+  color: var(--star-fill);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--rating) / 5 * 100%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.posted{
+  font-size:16px;
+  color:#9aa3af;
+}
+
+/* Responsive */
+
+@media(max-width:1100px){
+  .trending-grid{ grid-template-columns:repeat(2,1fr); }
+}
+
+@media(max-width:650px){
+  .trending-grid{ grid-template-columns:1fr; }
+}
+
+
+
+/* Footer */ 
+.footer {
+  background: #051923;
+  padding: 20px 10px;
+  font-family: "Cairo", sans-serif;
+  direction: ltr;
+  text-align: left;
+  color: #ffffff;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.footer-col {
+  flex: 1;
+  width: 30%;
+  min-width: 200px;
+}
+
+/* تخصيص مساحة أكبر للفورم */
+.contact-col {
+  flex: 1; 
+  min-width: 200px;
+}
+
+.footer-col h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 14px;
+}
+
+.footer-col ul li a {
+  text-decoration: none;
+  color: #adb5bd;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+  color: #ffffff;
+  padding-left: 5px;
+  opacity: 0.8;
+}
+
+/* Contact Form Styling */
+.contact-box h3 {
+  margin-bottom: 7px;
+}
+
+.contact-box p {
+  font-size: 14px;
+  color: #adb5bd;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 13px;
+}
+
+.footer-input {
+  width: 92%;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.footer-input:focus {
+  border-color: #00a8e8; 
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.footer-btn {
+  width: 92%;
+  padding: 12px;
+  background: #00a8e8;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.footer-btn:hover {
+  background: #007ea7;
+  transform: translateY(-2px);
+}
+
+/* Social Icons */
+.social-section {
+    justify-items: left;
+  margin-top: 30px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icon {
+  width: 28px;
+  height: 28px;
+  filter: grayscale(1) invert(1); /* جعل الأيقونات بيضاء لتناسب التصميم */
+  opacity: 0.7;
+  transition: 0.3s;
+}
+
+.social-icon:hover {
+  opacity: 1;
+  filter: none; /* ترجع لألوانها الأصلية عند المرور عليها */
+  transform: scale(1.2);
+}
+
+/* Bottom Bar */
+.footer-bottom {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  font-size: 13px;
+  color: #6c757d;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .footer-container {
+    flex-direction: column;
+  }
+  .footer-col, .contact-col {
+    width: 100%;
+  }
+}
+    .load-more {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+
+    .load-more button {
+      padding: 14px 40px;
+      background: #0077B8 ;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+
+
+    }
+
+    .load-more button:hover {
+      background: #004666;
+    }
+
+    /* ===== WHY SECTION ===== */
+    .why-section {
+      padding: 70px 6%;
+
+      text-align: center;
+    }
+
+    .why-section h2 {
+      font-size: 30px;
+      margin-bottom: 40px;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .why-box {
+      background: #ffffff;
+      padding: 30px 20px;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .why-box h4 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #005b84;
+    }
+
+    .why-box p {
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.6;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .steps {
+      padding: 70px 6%;
+      text-align: center;
+    }
+
+    .steps h2 {
+      font-size: 30px;
+      margin-bottom: 40px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .step {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 30px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* ===== FAQ ===== */
+    .faq {
+      padding: 70px 6%;
+
+    }
+
+    .faq h2 {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 30px;
+    }
+
+    .faq details {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+    }
+
+    .faq summary {
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .faq p {
+      font-size: 14px;
+      color: #4b5563;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    .hidden-card {
+      display: none;
+    }
+
+
+    /* ===== CTA ===== */
+    .cta {
+      padding: 80px 6%;
+      text-align: center;
+
+      color: #ffffff;
+    }
+
+    .cta h2 {
+      font-size: 34px;
+      margin-bottom: 25px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 15px 45px;
+      background: #005b84;
+      color: #ffffff;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+
+      .why-grid,
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    </style>
+</head>
+<body>
+ <!-- NAVBAR -->
+  <nav class="nav">
+  <div class="logo">
+    <a href="home.html">
+      <img src="../assets/images/logo.png" alt="Logo">
+    </a>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="../work.html">Find Work</a></li>
+    <li><a href="hie-talent.html">Hire Talent</a></li>
+    <li><a href="#about-section">About</a></li>
+    <li><a href="#contact-section">Contact</a></li>
+  </ul>
+<div class="user-menu-container">
+    <div class="notifications animated-bell">
+        <i class="fa-solid fa-bell bell-icon"></i>
+        <i class="fa-solid fa-circle bell-dot"></i>
+    </div>
+    
+    <div class="profile-wrapper">
+        <img src="../assets/images/client-avatar.png" alt="Profile" class="nav-avatar">
+        <div class="nav-dropdown">
+            <a href="dashboard/freelancer.html">My Profile</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </div>
+</div>
+</nav>
+        
+  <!-- TRENDING TASKS -->
+  <section class="trending-pro">
+
+    <div class="trending-header">
+      <h2>Trending Tasks</h2>
+    </div>
+
+    <div class="trending-grid">
+
+      <!-- TASK 1 -->
+      <div class="task-card">
+        <div class="task-top">
+          <span class="task-category">Development & IT</span>
+          <span class="task-price">$120</span>
+        </div>
+
+        <h3>Build Responsive Business Website</h3>
+
+        <p class="task-desc">
+          Need full stack developer to build responsive company website with modern UI and fast performance.
+        </p>
+
+        <div class="task-info">
+          <span>📍 Egypt</span>
+          <span>⏱ 3 days left</span>
+          <span>📩 12 offers</span>
+        </div>
+
+        <div class="task-skills">
+          <span>HTML</span><span>CSS</span><span>JavaScript</span><span>React</span>
+        </div>
+
+        <div class="task-footer">
+          <div class="client">
+            <img src="https://i.pravatar.cc/40?img=12">
+            <div>
+              <strong>Ahmed Hassan</strong>
+              <div class="rating">
+                <div class="stars" style="--rating: 3.5;"></div>
+               
+              </div>
+            </div>
+          </div>
+          <span class="posted">Posted 2h ago</span>
+        </div>
+      </div>
+
+      <!-- TASK 2 -->
+      <div class="task-card">
+        <div class="task-top">
+          <span class="task-category">Design</span>
+          <span class="task-price">$60</span>
+        </div>
+
+        <h3>Logo Design for AI Startup</h3>
+
+        <p class="task-desc">
+          Looking for creative designer to create modern logo and brand identity for new tech startup.
+        </p>
+
+        <div class="task-info">
+          <span>📍 UAE</span>
+          <span>⏱ 2 days left</span>
+          <span>📩 7 offers</span>
+        </div>
+
+        <div class="task-skills">
+          <span>Logo</span><span>Branding</span><span>Illustrator</span>
+        </div>
+
+        <div class="task-footer">
+          <div class="client">
+            <img src="https://i.pravatar.cc/40?img=5">
+            <div>
+              <strong>Sarah Ali</strong>
+              <div class="rating">
+                <div class="stars" style="--rating: 3.8;"></div>
+                
+              </div>
+            </div>
+          </div>
+          <span class="posted">Posted 5h ago</span>
+        </div>
+      </div>
+
+      <!-- TASK 3 -->
+      <div class="task-card">
+        <div class="task-top">
+          <span class="task-category">Writing</span>
+          <span class="task-price">$30</span>
+        </div>
+
+        <h3>Translate 10 Pages EN → AR</h3>
+
+        <p class="task-desc">
+          Need professional translator to translate business document accurately within 48 hours.
+        </p>
+
+        <div class="task-info">
+          <span>📍 Saudi</span>
+          <span>⏱ 1 day left</span>
+          <span>📩 15 offers</span>
+        </div>
+
+        <div class="task-skills">
+          <span>Translation</span><span>Arabic</span><span>English</span>
+        </div>
+
+        <div class="task-footer">
+          <div class="client">
+            <img src="https://i.pravatar.cc/40?img=22">
+            <div>
+              <strong>Mohamed Tarek</strong>
+              <div class="rating">
+                <div class="stars" style="--rating: 4.5;"></div>
+            
+              </div>
+            </div>
+          </div>
+          <span class="posted">Posted 1d ago</span>
+        </div>
+      </div>
+
+      <!-- TASK 4 -->
+      <div class="task-card">
+        <div class="task-top">
+          <span class="task-category">Marketing</span>
+          <span class="task-price">$80</span>
+        </div>
+
+        <h3>Social Media Ads Campaign</h3>
+
+        <p class="task-desc">
+          Need marketing expert to manage Facebook & Instagram ads campaign for ecommerce store.
+        </p>
+
+        <div class="task-info">
+          <span>📍 Qatar</span>
+          <span>⏱ 4 days left</span>
+          <span>📩 9 offers</span>
+        </div>
+
+        <div class="task-skills">
+          <span>Facebook Ads</span><span>Marketing</span>
+        </div>
+
+        <div class="task-footer">
+          <div class="client">
+            <img src="https://i.pravatar.cc/40?img=33">
+            <div>
+              <strong>Omar Adel</strong>
+              <div class="rating">
+                <div class="stars" style="--rating: 4.1;"></div>
+           
+              </div>
+            </div>
+          </div>
+          <span class="posted">Posted today</span>
+        </div>
+        
+      </div>
+
+<!-- TASK 5 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Development</span>
+    <span class="task-price">$150</span>
+  </div>
+  <h3>Build E-commerce Website</h3>
+  <p class="task-desc">Need full e-commerce website with cart, payment integration and admin dashboard.</p>
+  <div class="task-info">
+    <span>📍 Egypt</span>
+    <span>⏱ 5 days left</span>
+    <span>📩 18 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>HTML</span><span>CSS</span><span>JS</span><span>PHP</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=44">
+      <div>
+        <strong>Khaled Samy</strong>
+        <div class="stars" style="--rating: 4.2;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 3h ago</span>
+  </div>
+</div>
+
+<!-- TASK 6 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Design</span>
+    <span class="task-price">$45</span>
+  </div>
+  <h3>UI Design for Mobile App</h3>
+  <p class="task-desc">Design modern and clean UI screens for a mobile application.</p>
+  <div class="task-info">
+    <span>📍 UAE</span>
+    <span>⏱ 2 days left</span>
+    <span>📩 6 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>Figma</span><span>UI</span><span>UX</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=11">
+      <div>
+        <strong>Mona Ali</strong>
+        <div class="stars" style="--rating: 3.9;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 6h ago</span>
+  </div>
+</div>
+
+<!-- TASK 7 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Writing</span>
+    <span class="task-price">$25</span>
+  </div>
+  <h3>Blog Articles Writing</h3>
+  <p class="task-desc">Write SEO optimized blog posts about technology topics.</p>
+  <div class="task-info">
+    <span>📍 Saudi</span>
+    <span>⏱ 3 days left</span>
+    <span>📩 10 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>SEO</span><span>Writing</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=19">
+      <div>
+        <strong>Ali Saad</strong>
+        <div class="stars" style="--rating: 4.0;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 1d ago</span>
+  </div>
+</div>
+
+<!-- TASK 8 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Marketing</span>
+    <span class="task-price">$70</span>
+  </div>
+  <h3>Google Ads Setup</h3>
+  <p class="task-desc">Setup and optimize Google Ads campaign for online store.</p>
+  <div class="task-info">
+    <span>📍 Kuwait</span>
+    <span>⏱ 4 days left</span>
+    <span>📩 8 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>Google Ads</span><span>PPC</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=25">
+      <div>
+        <strong>Hassan Youssef</strong>
+        <div class="stars" style="--rating: 4.3;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted today</span>
+  </div>
+</div>
+
+<!-- TASK 9 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Development</span>
+    <span class="task-price">$90</span>
+  </div>
+  <h3>Fix Website Bugs</h3>
+  <p class="task-desc">Fix bugs and improve performance of existing website.</p>
+  <div class="task-info">
+    <span>📍 Egypt</span>
+    <span>⏱ 1 day left</span>
+    <span>📩 14 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>JavaScript</span><span>Debugging</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=7">
+      <div>
+        <strong>Mahmoud Fathy</strong>
+        <div class="stars" style="--rating: 3.7;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 2h ago</span>
+  </div>
+</div>
+
+<!-- TASK 10 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Design</span>
+    <span class="task-price">$55</span>
+  </div>
+  <h3>Business Card Design</h3>
+  <p class="task-desc">Design professional business cards for company branding.</p>
+  <div class="task-info">
+    <span>📍 Qatar</span>
+    <span>⏱ 2 days left</span>
+    <span>📩 5 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>Photoshop</span><span>Illustrator</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=31">
+      <div>
+        <strong>Yara Ahmed</strong>
+        <div class="stars" style="--rating: 4.4;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 4h ago</span>
+  </div>
+</div>
+
+<!-- TASK 11 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Writing</span>
+    <span class="task-price">$40</span>
+  </div>
+  <h3>Product Description Writing</h3>
+  <p class="task-desc">Write attractive product descriptions for ecommerce products.</p>
+  <div class="task-info">
+    <span>📍 UAE</span>
+    <span>⏱ 3 days left</span>
+    <span>📩 11 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>Copywriting</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=14">
+      <div>
+        <strong>Salma Hassan</strong>
+        <div class="stars" style="--rating: 4.1;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted yesterday</span>
+  </div>
+</div>
+
+<!-- TASK 12 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Marketing</span>
+    <span class="task-price">$85</span>
+  </div>
+  <h3>Instagram Growth</h3>
+  <p class="task-desc">Grow Instagram account organically with real followers.</p>
+  <div class="task-info">
+    <span>📍 Saudi</span>
+    <span>⏱ 5 days left</span>
+    <span>📩 13 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>Instagram</span><span>Marketing</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=28">
+      <div>
+        <strong>Ola Nabil</strong>
+        <div class="stars" style="--rating: 4.0;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted today</span>
+  </div>
+</div>
+
+<!-- TASK 13 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Development</span>
+    <span class="task-price">$200</span>
+  </div>
+  <h3>Build Dashboard System</h3>
+  <p class="task-desc">Create admin dashboard with charts and analytics.</p>
+  <div class="task-info">
+    <span>📍 Egypt</span>
+    <span>⏱ 6 days left</span>
+    <span>📩 20 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>React</span><span>Charts</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=36">
+      <div>
+        <strong>Amr Khaled</strong>
+        <div class="stars" style="--rating: 4.6;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 1h ago</span>
+  </div>
+</div>
+
+<!-- TASK 14 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Design</span>
+    <span class="task-price">$65</span>
+  </div>
+  <h3>Landing Page Design</h3>
+  <p class="task-desc">Design high-converting landing page for product.</p>
+  <div class="task-info">
+    <span>📍 UAE</span>
+    <span>⏱ 2 days left</span>
+    <span>📩 9 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>UI</span><span>UX</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=17">
+      <div>
+        <strong>Nour Ahmed</strong>
+        <div class="stars" style="--rating: 3.8;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 7h ago</span>
+  </div>
+</div>
+
+<!-- TASK 15 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Writing</span>
+    <span class="task-price">$35</span>
+  </div>
+  <h3>Resume Writing</h3>
+  <p class="task-desc">Create professional CV and cover letter.</p>
+  <div class="task-info">
+    <span>📍 Qatar</span>
+    <span>⏱ 1 day left</span>
+    <span>📩 6 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>CV</span><span>Writing</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=9">
+      <div>
+        <strong>Ahmed Samir</strong>
+        <div class="stars" style="--rating: 4.2;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted 3h ago</span>
+  </div>
+</div>
+
+<!-- TASK 16 -->
+<div class="task-card">
+  <div class="task-top">
+    <span class="task-category">Marketing</span>
+    <span class="task-price">$95</span>
+  </div>
+  <h3>Email Marketing Campaign</h3>
+  <p class="task-desc">Setup email campaigns and automation funnels.</p>
+  <div class="task-info">
+    <span>📍 Kuwait</span>
+    <span>⏱ 4 days left</span>
+    <span>📩 10 offers</span>
+  </div>
+  <div class="task-skills">
+    <span>Email</span><span>Marketing</span>
+  </div>
+  <div class="task-footer">
+    <div class="client">
+      <img src="https://i.pravatar.cc/40?img=3">
+      <div>
+        <strong>Mostafa Ali</strong>
+        <div class="stars" style="--rating: 4.5;"></div>
+      </div>
+    </div>
+    <span class="posted">Posted today</span>
+  </div>
+</div>
+  </section>
+  
+
+    <!-- FOOTER -->
+     <footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <h3>Task Hunt</h3>
+      <ul>
+        <li><a href="#">About Task Hunt</a></li>
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Rights Protection</a></li>
+      </ul>
+      <div class="social-section">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="social-icon" alt="Facebook">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="social-icon" alt="Instagram">
+          <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="social-icon" alt="TikTok">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="social-icon" alt="Twitter">
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h3>Community</h3>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Discussions</a></li>
+        <li><a href="#">Topics</a></li>
+        <li><a href="#">User Experiences</a></li>
+      </ul>
+    </div>
+
+    <div id="contact-section" class="footer-col contact-col">
+      <div class="contact-box">
+        <form id="contactForm">
+          <h3>Drop us a message</h3>
+          <p>We'd love to hear from you!</p>
+          
+          <div class="form-group">
+            <input type="text" class="footer-input" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <input type="email" class="footer-input" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <textarea class="footer-input" rows="3" placeholder="Your Message" required></textarea>
+          </div>
+          <button type="submit" class="footer-btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Task Hunt — All rights reserved</p>
+  </div>
+</footer>
+
+</body>
+
+</html>
+</body>
+</html>

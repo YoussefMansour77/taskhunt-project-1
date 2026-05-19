@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard | TaskHunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="dash-nav">
+  <a href="../client-home.html" class="logo">Task<span>Hunt</span></a>
+  <div class="dash-nav-right">
+
+    <!-- Notification Bell -->
+    <div class="notif-bell" id="notifBell" onclick="toggleNotifDrop()">
+      <i class="fas fa-bell"></i>
+      <div class="notif-badge" id="notifBadge"></div>
+
+      <div class="notif-dropdown" id="notifDrop">
+        <div class="notif-drop-header">
+          Notifications
+          <button onclick="markAllRead(event)">Mark all read</button>
+        </div>
+        <div class="notif-list" id="notifList">
+          <div class="notif-empty">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="nav-avatar" id="navAvatar"></div>
+    <a href="../client-home.html" style="font-size:13px;color:#4a6272;">← Home</a>
+    <a href="#" onclick="Auth.logout();return false;" style="font-size:13px;color:#ef4444;">Logout</a>
+  </div>
+</nav>
+
+<div class="dash-layout">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <h1>My Dashboard</h1>
+    <p>Manage your posted jobs and review freelancer proposals.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card">
+      <div class="stat-label">Total Posts</div>
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-icon">📋</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Open Posts</div>
+      <div class="stat-num" id="statOpen">—</div>
+      <div class="stat-icon">🟢</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Proposals</div>
+      <div class="stat-num" id="statProposals">—</div>
+      <div class="stat-icon">📩</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active Chats</div>
+      <div class="stat-num" id="statChats">—</div>
+      <div class="stat-icon">💬</div>
+    </div>
+  </div>
+
+  <!-- Posts & Proposals -->
+  <div class="section-card">
+    <div class="section-card-header">
+      My Job Posts
+      <a href="../client-home.html" style="font-size:13px;color:#0077B8;">+ Post New Job</a>
+    </div>
+    <div class="section-card-body" id="postsContainer">
+      <div class="empty-state"><div class="empty-icon">⏳</div><p>Loading your posts…</p></div>
+    </div>
+  </div>
+
+  <!-- Active Chats -->
+  <div class="section-card">
+    <div class="section-card-header">Active Conversations</div>
+    <div class="section-card-body" id="chatsContainer">
+      <div class="empty-state"><div class="empty-icon">⏳</div><p>Loading…</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="../../assets/js/api.js"></script>
+<script>
+// ── Auth guard ───────────────────────────────────────────────────
+if (!Auth.isLoggedIn()) window.location.href = '../login.html';
+const me = Auth.user();
+if (me && me.role !== 'client') window.location.href = '../freelancers-home.html';
+
+// Nav avatar
+const ini = me ? me.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : '?';
+document.getElementById('navAvatar').textContent = ini;
+
+// ── Notifications ────────────────────────────────────────────────
+let notifOpen = false;
+
+function toggleNotifDrop() {
+  notifOpen = !notifOpen;
+  document.getElementById('notifDrop').classList.toggle('open', notifOpen);
+  if (notifOpen) loadNotifications();
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('notifBell').contains(e.target)) {
+    notifOpen = false;
+    document.getElementById('notifDrop').classList.remove('open');
+  }
+});
+
+function timeAgo(d) {
+  const diff = Date.now() - new Date(d);
+  const m = Math.floor(diff/60000), h = Math.floor(m/60), day = Math.floor(h/24);
+  if (day > 0) return `${day}d ago`; if (h > 0) return `${h}h ago`; if (m > 0) return `${m}m ago`; return 'just now';
+}
+
+const notifIcon = { proposal_received:'📩', proposal_accepted:'🎉', proposal_rejected:'❌', new_message:'💬' };
+
+async function loadNotifications() {
+  const list = document.getElementById('notifList');
+  try {
+    const notifs = await get('/notifications');
+    const badge  = document.getElementById('notifBadge');
+    const unread = notifs.filter(n => !n.is_read).length;
+    badge.textContent = unread > 9 ? '9+' : unread;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+
+    if (!notifs.length) { list.innerHTML = '<div class="notif-empty">No notifications yet</div>'; return; }
+    list.innerHTML = notifs.map(n => `
+      <div class="notif-item ${n.is_read ? '' : 'unread'}" onclick="handleNotif(${n.id},'${n.ref_type}',${n.ref_id})">
+        <div class="notif-icon">${notifIcon[n.type] || '🔔'}</div>
+        <div class="notif-content">
+          <div class="notif-title">${n.title}</div>
+          <div class="notif-body">${n.body}</div>
+          <div class="notif-time">${timeAgo(n.created_at)}</div>
+        </div>
+      </div>`).join('');
+  } catch(e) { list.innerHTML = '<div class="notif-empty">Failed to load</div>'; }
+}
+
+async function handleNotif(id, refType, refId) {
+  await fetch(`/api/notifications/${id}/read`, { method:'PUT', headers:{'Authorization':'Bearer '+Auth.token()} });
+  if (refType === 'conversation') window.location.href = `../../html/chat.html?id=${refId}`;
+  loadNotifications();
+}
+
+async function markAllRead(e) {
+  e.stopPropagation();
+  await fetch('/api/notifications/read-all', { method:'PUT', headers:{'Authorization':'Bearer '+Auth.token()} });
+  loadNotifications();
+}
+
+async function pollNotifCount() {
+  try {
+    const data = await get('/notifications/unread-count');
+    const badge = document.getElementById('notifBadge');
+    badge.textContent = data.count > 9 ? '9+' : data.count;
+    badge.style.display = data.count > 0 ? 'flex' : 'none';
+  } catch(_) {}
+}
+
+// ── Posts & Proposals ────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const posts = await getPosts(`user_id=${me.id}&status=all&limit=100`);
+    const convs = await get('/chat/conversations');
+
+    // Stats
+    document.getElementById('statTotal').textContent     = posts.length;
+    document.getElementById('statOpen').textContent      = posts.filter(p=>p.status==='open').length;
+    document.getElementById('statProposals').textContent = posts.reduce((s,p)=>s+(p.proposals_count||0),0);
+    document.getElementById('statChats').textContent     = convs.length;
+
+    // Posts
+    const container = document.getElementById('postsContainer');
+    if (!posts.length) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>No posts yet. <a href="../client-home.html" style="color:#0077B8;">Post your first job →</a></p></div>';
+    } else {
+      container.innerHTML = posts.map(p => `
+        <div class="post-row" id="post-${p.id}">
+          <div class="post-row-header" onclick="togglePost(${p.id}, this)">
+            <div class="post-row-title">${p.title}</div>
+            <div class="post-row-meta">
+              <span class="post-badge ${p.status==='open'?'badge-open':'badge-closed'}">${p.status}</span>
+              <span>$${p.budget}</span>
+              <span>${p.proposals_count} proposal${p.proposals_count!==1?'s':''}</span>
+              <span>${timeAgo(p.created_at)}</span>
+            </div>
+            <i class="fas fa-chevron-down post-chevron"></i>
+          </div>
+          <div class="proposals-panel" id="panel-${p.id}">
+            <div class="proposals-loading">Click to load proposals…</div>
+          </div>
+        </div>`).join('');
+    }
+
+    // Chats
+    const chatsEl = document.getElementById('chatsContainer');
+    if (!convs.length) {
+      chatsEl.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>No active conversations yet.</p></div>';
+    } else {
+      chatsEl.innerHTML = convs.map(c => {
+        const other = c.freelancer_name;
+        const ini2  = other.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+        return `
+        <div class="my-proposal-row" style="cursor:pointer;" onclick="window.location.href='../../html/chat.html?id=${c.id}'">
+          <div class="proposal-avatar">${c.freelancer_avatar ? `<img src="${c.freelancer_avatar}">` : ini2}</div>
+          <div class="my-proposal-info">
+            <div class="my-proposal-post">${other}</div>
+            <div class="my-proposal-msg">${c.post_title} — ${c.last_message || 'No messages yet'}</div>
+          </div>
+          ${c.unread_count > 0 ? `<span class="conv-unread">${c.unread_count}</span>` : ''}
+          <button class="btn-chat" onclick="event.stopPropagation();window.location.href='../../html/chat.html?id=${c.id}'">Open Chat</button>
+        </div>`;
+      }).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+// ── Toggle post accordion ─────────────────────────────────────────
+let loadedPanels = {};
+async function togglePost(postId, headerEl) {
+  const row   = document.getElementById(`post-${postId}`);
+  const panel = document.getElementById(`panel-${postId}`);
+  const isExp = row.classList.contains('expanded');
+
+  document.querySelectorAll('.post-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (isExp) return;
+  row.classList.add('expanded');
+
+  if (loadedPanels[postId]) return;
+  loadedPanels[postId] = true;
+
+  panel.innerHTML = '<div class="proposals-loading">Loading proposals…</div>';
+  try {
+    const proposals = await getProposals(postId);
+    if (!proposals.length) {
+      panel.innerHTML = '<div class="proposals-loading" style="color:#9ab;">No proposals yet.</div>';
+      return;
+    }
+    panel.innerHTML = proposals.map(pr => {
+      const ini = pr.freelancer_name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const avatarHtml = pr.freelancer_avatar
+        ? `<img src="${pr.freelancer_avatar}">`
+        : ini;
+      const skills = pr.freelancer_skills
+        ? JSON.parse(pr.freelancer_skills).slice(0,3).map(s=>`<span style="background:#dff0fb;color:#0077B8;padding:2px 8px;border-radius:12px;font-size:11px;">${s}</span>`).join(' ')
+        : '';
+      let actions = '';
+      if (pr.status === 'pending') {
+        actions = `
+          <div class="proposal-actions">
+            <button class="btn-accept" onclick="handleProposal(${pr.post_id},${pr.id},'accept')">✓ Accept</button>
+            <button class="btn-reject" onclick="handleProposal(${pr.post_id},${pr.id},'reject')">✕ Remove</button>
+          </div>`;
+      } else if (pr.status === 'accepted') {
+        actions = `<div class="proposal-actions"><span class="proposal-accepted-tag">✓ Accepted</span>
+          <button class="btn-chat" onclick="goToChat(${pr.id})">Open Chat →</button></div>`;
+      } else {
+        actions = `<div class="proposal-actions"><span class="proposal-rejected-tag">Removed</span></div>`;
+      }
+      return `
+        <div class="proposal-card" id="pcard-${pr.id}">
+          <div class="proposal-avatar">${avatarHtml}</div>
+          <div class="proposal-body">
+            <div class="proposal-name">${pr.freelancer_name}</div>
+            ${pr.freelancer_title ? `<span class="proposal-title-tag">${pr.freelancer_title}</span>` : ''}
+            <p class="proposal-msg">${pr.message}</p>
+            <div style="margin-bottom:6px;">${skills}</div>
+            <div class="proposal-meta">
+              <span class="proposal-price">$${pr.price}</span>
+              <span>${timeAgo(pr.created_at)}</span>
+            </div>
+            ${actions}
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e) { panel.innerHTML = '<div class="proposals-loading" style="color:#e00;">Failed to load proposals.</div>'; }
+}
+
+async function handleProposal(postId, proposalId, action) {
+  const card = document.getElementById(`pcard-${proposalId}`);
+  try {
+    const res = await fetch(`/api/posts/${postId}/proposals/${proposalId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+Auth.token() },
+      body: JSON.stringify({ action })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    if (action === 'accept') {
+      // Refresh whole dashboard to reflect closed post + conversation
+      loadedPanels = {};
+      loadDashboard();
+    } else {
+      // Just update this card UI
+      card.querySelector('.proposal-actions').innerHTML = '<span class="proposal-rejected-tag">Removed</span>';
+    }
+  } catch(e) { alert(e.message); }
+}
+
+async function goToChat(proposalId) {
+  const convs = await get('/chat/conversations');
+  const conv = convs.find(c => c.proposal_id === proposalId);
+  if (conv) window.location.href = `../../html/chat.html?id=${conv.id}`;
+}
+
+// ── Init ────────────────────────────────────────────────────────
+loadDashboard();
+loadNotifications();
+setInterval(pollNotifCount, 15000);
+</script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskHunt | Home</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../assets/libs/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/home.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+</head>
+
+<body>
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="logo">
+    <a href="home.html"><img src="../assets/images/logo.png" alt="Logo"></a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="work.html">Find Work</a></li>
+    <li><a href="hie-talent.html">Hire Talent</a></li>
+    <li><a href="#about-section">About</a></li>
+    <li><a href="#contact-section">Contact</a></li>
+  </ul>
+  <div class="user-menu-container">
+    <div class="notifications animated-bell" style="position:relative;cursor:pointer;" onclick="toggleNotifDropdown(event)">
+      <i class="fa-solid fa-bell bell-icon"></i>
+      <span id="notifCount" style="display:none;position:absolute;top:-5px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;padding:0 4px;align-items:center;justify-content:center;"></span>
+      <div id="notifDropdown" style="display:none;position:absolute;top:40px;right:-10px;width:320px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;border:1px solid #eee;overflow:hidden;">
+        <div style="padding:12px 16px;font-weight:700;font-size:14px;border-bottom:1px solid #eee;color:#051923;">Notifications</div>
+        <div id="notifDropList" style="max-height:300px;overflow-y:auto;"></div>
+        <a href="dashboard/freelancer.html" style="display:block;text-align:center;padding:11px;color:#0077B8;font-size:13px;font-weight:600;border-top:1px solid #eee;text-decoration:none;">See All Notifications →</a>
+      </div>
+    </div>
+
+    <!-- Messages Icon -->
+    <div id="msgIconWrap" style="position:relative;cursor:pointer;margin-right:4px;" onclick="toggleMsgDropdown(event)">
+      <i class="fa-solid fa-comment-dots" style="font-size:20px;color:#555;"></i>
+      <span id="msgCount" style="display:none;position:absolute;top:-5px;right:-6px;background:#22c55e;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;padding:0 4px;align-items:center;justify-content:center;"></span>
+      <div id="msgDropdown" style="display:none;position:absolute;top:40px;right:-10px;width:300px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;border:1px solid #eee;overflow:hidden;">
+        <div style="padding:12px 16px;font-weight:700;font-size:14px;border-bottom:1px solid #eee;color:#051923;">Messages</div>
+        <div id="msgDropList" style="max-height:280px;overflow-y:auto;"></div>
+        <a href="chat.html" style="display:block;text-align:center;padding:11px;color:#0077B8;font-size:13px;font-weight:600;border-top:1px solid #eee;text-decoration:none;">See All Messages →</a>
+      </div>
+    </div>
+
+    <div class="profile-wrapper">
+      <div id="nav-avatar-circle" style="width:36px;height:36px;border-radius:50%;background:#0090E0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;cursor:pointer;" onclick="toggleProfileDropdown(event)">?</div>
+      <div class="nav-dropdown">
+        <span id="nav-user-name" style="padding:10px 16px;display:block;font-weight:600;color:#051923;border-bottom:1px solid #eee;"></span>
+        <a href="dashboard/freelancer.html">My Profile</a>
+        <a href="work.html" style="color:#0090E0;font-weight:600;">Browse Jobs</a>
+        <a href="#" onclick="toggleDarkMode();return false;" id="dark-mode-btn" style="color:#555;display:flex;align-items:center;gap:8px;"><i class="fa-solid fa-moon"></i> Dark Mode</a>
+        <a href="#" onclick="Auth.logout();return false;" style="color:#e53e3e;">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+           
+
+  <section class="hero-section">
+    <div class="hero-wrapper">
+      <div class="hero-left">
+        <div class="hero-content">
+          <h1>Welcome to <span>TaskHunt</span></h1>
+          <p>Connecting experts with the best opportunities.</p>
+        </div>
+
+        <div class="search-box-container">
+          <div class="search-input-wrapper">
+            <input type="text" placeholder="Look for a skill, a programming language...">
+            <button class="search-btn">Search</button>
+          </div>
+          <div class="quick-actions">
+            <button class="action-btn blue">Hire Talent</button>
+            <button class="action-btn outline">Find Work</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <img src="../assets/images/hero-illustration.png" alt="Hero Illustration">
+      </div>
+    </div>
+  </section>
+
+
+  <!-- TRENDING TASKS -->
+  <section class="trending-pro">
+    <div class="trending-header">
+      <h2>Latest Jobs For You</h2>
+    </div>
+    <div class="trending-grid" id="trending-grid">
+      <p id="tasks-loading" style="text-align:center;color:#888;grid-column:1/-1;padding:40px;">Loading jobs...</p>
+    </div>
+  </section>
+
+  <div class="share-post-section">
+    <a href="work.html" class="lin">
+      <button class="share-btn"><i class="fa-solid fa-briefcase"></i> Browse All Jobs</button>
+    </a>
+  </div>
+
+  <!-- ===== CLIENT TESTIMONIALS ===== -->
+  <section class="testimonials-section">
+
+    <h2 class="section-main-title">What Clients Say</h2>
+
+    <div class="testimonials-container">
+
+      <!-- CARD 1 -->
+      <div class="testi-card">
+        <div class="testi-category">Development & IT</div>
+
+        <div class="testi-header">
+          <div class="client-profile">
+            <div style="width:48px;height:48px;border-radius:50%;background:#0090E0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0;">AR</div>
+            <div>
+              <h4 class="client-name">Ahmed Rayan</h4>
+              <div class="rating">
+                <div  class="stars" style="--rating: 4.1;"></div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 18px;" class="testi-text">
+          "The quality of the website delivered was outstanding. Very professional communication and the project was
+          completed right on time."
+        </p>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="testi-card">
+        <div class="testi-category">Design & Creative</div>
+
+        <div class="testi-header">
+          <div class="client-profile">
+            <div style="width:48px;height:48px;border-radius:50%;background:#00C8FF;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0;">SJ</div>
+            <div>
+              <h4 class="client-name">Sarah Jamal</h4>
+              <div class="rating">
+                <div class="stars" style="--rating: 4.5;"></div>
+               
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 18px;" class="testi-text">
+          "Amazing logo design! They really understood my vision for the startup and brought it to life with modern
+          aesthetics."
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- CATEGORIES -->
+
+  <h2 class="section-title">Popular Categories</h2>
+
+  <section class="categories">
+    <a href="categories/all-categories.html" class="lin">
+      <div class="category">
+        <i class="fa-solid fa-brain icon"></i>
+        <h3>Data & AI</h3>
+      </div>
+    </a>
+    <a href="categories/all-categories.html" class="lin">
+      <div class="category">
+        <i class="fa-solid fa-code icon"></i>
+        <h3>Development & IT</h3>
+      </div>
+    </a>
+<a href="categories/all-categories.html"class="lin">
+    <div class="category">
+      <i class="fa-solid fa-palette icon"></i>
+      <h3>Design & Creative</h3>
+    </div>
+    </a>
+<a href="categories/all-categories.html"class="lin">
+    <div class="category">
+      <i class="fa-solid fa-chart-line icon"></i>
+      <h3>Sales & Marketing</h3>
+    </div>
+    </a>
+<a href="categories/all-categories.html"class="lin">
+    <div class="category">
+      <i class="fa-solid fa-language icon"></i>
+      <h3>Writing & Translation</h3>
+    </div>
+</a>
+    <a href="categories/all-categories.html" class="lin">
+      <div class="category">
+        <i class="fa-solid fa-headset icon"></i>
+        <h3>Admin & Support</h3>
+      </div>
+    </a>
+    <a href="categories/all-categories.html" class="lin">
+      <div class="category">
+        <i class="fa-solid fa-calculator icon"></i>
+        <h3>Finance & Accounting</h3>
+      </div>
+    </a>
+    <a href="categories/all-categories.html" class="lin">
+      <div class="category">
+        <i class="fa-solid fa-scale-balanced icon"></i>
+        <h3>Legal</h3>
+      </div>
+    </a>
+    <a href="categories/all-categories.html" class="lin">
+      <div class="category">
+        <i class="fa-solid fa-users icon"></i>
+        <h3>HR & Training</h3>
+      </div>
+    </a>
+    <a href="categories/all-categories.html" class="lin">
+      <div class="category">
+        <i class="fa-solid fa-building icon"></i>
+        <h3>Engineering & Architecture</h3>
+      </div>
+    </a>
+  </section>
+
+  <!-- about -->
+
+  <section id="about-section" class="about-section">
+    <div class="about-container">
+      <div class="about-text">
+        <h2>Empowering Your <span class="blue">Success</span></h2>
+        <p>Task Hunt is a modern marketplace connecting top talent with ambitious projects. We simplify collaboration,
+          ensure secure growth, and turn professional goals into reality.</p>
+      </div>
+      <div class="about-visual">
+        <div class="dot-animation">
+          <div class="pulse-dot"></div>
+          <div class="orbit-dot"></div>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <!-- FEATURED SERVICES -->
+    <section class="features-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="features-title">Why Task Hunt is Your Best Choice</h2>
+            <p class="features-subtitle">We provide a secure and efficient ecosystem for both freelancers and clients</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <img src="../assets/images/3-removebg-preview.png" alt="Categories">
+                </div>
+                <h3>Over 350 Categories</h3>
+                <p>Explore a vast array of specialized categories tailored to meet every professional need.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <img src="../assets/images/074325ae7cdf4a80da970d8e30749536-removebg-preview.png" alt="Prices">
+                </div>
+                <h3>Affordable Prices</h3>
+                <p>Get high-quality results without breaking the bank, with services starting as low as $5.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <img src="../assets/images/91ff3480-d383-4671-92d8-c2f70e31daa1-removebg-preview.png" alt="Support">
+                </div>
+                <h3>24/7 Customer Support</h3>
+                <p>Our dedicated support team is available around the clock to assist you with any inquiries.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <img src="../assets/images/6-removebg-preview.png" alt="Protection">
+                </div>
+                <h3>Rights Protection</h3>
+                <p>Secure payment systems that guarantee your financial rights until the work is delivered.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <img src="../assets/images/5-removebg-preview.png" alt="Transactions">
+                </div>
+                <h3>Safe Transactions</h3>
+                <p>Verified profiles and encrypted data ensure every transaction is 100% secure.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <img src="../assets/images/da2e6e42-6d51-4598-8d94-6a3058fcef9b-removebg-preview.png" alt="Providers">
+                </div>
+                <h3>Expert Providers</h3>
+                <p>Collaborate with top-tier freelancers vetted for their skills and professional history.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- CTA -->
+    <section class="cta">
+      <h2>Ready to get started?</h2>
+      <br><br>
+      <a href="signup/ask-signup.html">
+        <button class="btn join" onclick="window.location.href='signup/ask-signup.html'">Join for Free </button>
+      </a>
+    </section>
+
+    <!-- FOOTER -->
+     <footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <h3>Task Hunt</h3>
+      <ul>
+        <li><a href="#">About Task Hunt</a></li>
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Rights Protection</a></li>
+      </ul>
+      <div class="social-section">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="social-icon" alt="Facebook">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="social-icon" alt="Instagram">
+          <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="social-icon" alt="TikTok">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="social-icon" alt="Twitter">
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h3>Community</h3>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Discussions</a></li>
+        <li><a href="#">Topics</a></li>
+        <li><a href="#">User Experiences</a></li>
+      </ul>
+    </div>
+
+    <div id="contact-section" class="footer-col contact-col">
+      <div class="contact-box">
+        <form id="contactForm">
+          <h3>Drop us a message</h3>
+          <p>We'd love to hear from you!</p>
+          
+          <div class="form-group">
+            <input type="text" class="footer-input" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <input type="email" class="footer-input" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <textarea class="footer-input" rows="3" placeholder="Your Message" required></textarea>
+          </div>
+          <button type="submit" class="footer-btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Task Hunt — All rights reserved</p>
+  </div>
+</footer>
+
+<script src="../assets/js/api.js"></script>
+<script src="/assets/js/navbar.js"></script>
+<script>
+  // ── Auth guard ───────────────────────────────────────
+  const user = Auth.user();
+  if (!user) { window.location.href = 'login.html'; }
+
+  // ── Nav ─────────────────────────────────────────────
+  const initials = user ? user.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : '?';
+  document.getElementById('nav-avatar-circle').textContent = initials;
+  document.getElementById('nav-user-name').textContent     = user ? user.name : '';
+
+  // ── Helpers ──────────────────────────────────────────
+  function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr);
+    const m = Math.floor(diff/60000), h = Math.floor(m/60), d = Math.floor(h/24);
+    if (d > 0) return `${d}d ago`; if (h > 0) return `${h}h ago`; return `${m}m ago`;
+  }
+
+  function taskCard(p) {
+    return `
+    <div class="task-card">
+      <div class="task-top">
+        <span class="task-category">${p.category}</span>
+        <span class="task-price">$${p.budget}</span>
+      </div>
+      <h3>${p.title}</h3>
+      <p class="task-desc">${p.description.slice(0,120)}${p.description.length>120?'...':''}</p>
+      <div class="task-footer" style="margin-top:12px;">
+        <div class="client">
+          <div style="width:36px;height:36px;border-radius:50%;background:#0090E0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">
+            ${p.author_name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+          </div>
+          <div><strong>${p.author_name}</strong></div>
+        </div>
+        <span class="posted">${timeAgo(p.created_at)}</span>
+      </div>
+    </div>`;
+  }
+
+  // ── Load posts ───────────────────────────────────────
+  async function loadTasks() {
+    const grid    = document.getElementById('trending-grid');
+    const loading = document.getElementById('tasks-loading');
+    try {
+      const posts = await getPosts('limit=8');
+      loading.style.display = 'none';
+      grid.innerHTML = posts.length
+        ? posts.map(taskCard).join('')
+        : '<p style="text-align:center;color:#888;grid-column:1/-1;padding:40px;">No jobs available yet. Check back soon!</p>';
+    } catch(e) { loading.textContent = 'Could not load jobs.'; }
+  }
+  loadTasks();
+
+  // Poll notification count every 20s
+  async function pollNotif() {
+    try {
+      const res = await fetch('/api/notifications/unread-count', { headers: { 'Authorization': 'Bearer ' + Auth.token() } });
+      const data = await res.json();
+      const el = document.getElementById('notifCount');
+      if (data.count > 0) { el.textContent = data.count > 9 ? '9+' : data.count; el.style.display = 'flex'; }
+      else { el.style.display = 'none'; }
+    } catch(_) {}
+  }
+  pollNotif();
+  setInterval(pollNotif, 20000);
+
+  // Messages icon & dropdown
+  async function pollMsgCount() {
+    if (!Auth.isLoggedIn()) return;
+    try {
+      const res  = await fetch('/api/chat/unread', { headers: { 'Authorization': 'Bearer ' + Auth.token() } });
+      const data = await res.json();
+      const badge = document.getElementById('msgCount');
+      if (data.count > 0) { badge.textContent = data.count > 99 ? '99+' : data.count; badge.style.display = 'flex'; }
+      else badge.style.display = 'none';
+    } catch(_) {}
+  }
+  pollMsgCount();
+  setInterval(pollMsgCount, 20000);
+
+  function toggleMsgDropdown(e) {
+    e.stopPropagation();
+    const dd = document.getElementById('msgDropdown');
+    if (dd.style.display === 'block') { dd.style.display = 'none'; return; }
+    loadMsgDropdown();
+    dd.style.display = 'block';
+  }
+  document.addEventListener('click', () => {
+    const dd = document.getElementById('msgDropdown'); if (dd) dd.style.display = 'none';
+    const nd = document.getElementById('notifDropdown'); if (nd) nd.style.display = 'none';
+    document.querySelector('.nav-dropdown')?.classList.remove('open');
+  });
+
+  // Bell notifications dropdown
+  function toggleNotifDropdown(e) {
+    e.stopPropagation();
+    const dd = document.getElementById('notifDropdown');
+    if (dd.style.display === 'block') { dd.style.display = 'none'; return; }
+    dd.style.display = 'block';
+    loadNotifDropdown();
+  }
+
+  async function loadNotifDropdown() {
+    const list = document.getElementById('notifDropList');
+    list.innerHTML = '<p style="padding:14px;text-align:center;color:#9ab;font-size:13px;">Loading…</p>';
+    try {
+      const res = await fetch('/api/notifications?limit=8', { headers: { 'Authorization': 'Bearer ' + Auth.token() } });
+      const data = await res.json();
+      const notifs = Array.isArray(data) ? data : (data.notifications || []);
+      if (!notifs.length) {
+        list.innerHTML = '<p style="padding:18px;text-align:center;color:#9ab;font-size:13px;">No notifications yet.</p>';
+        return;
+      }
+      list.innerHTML = notifs.map(n => `
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-bottom:1px solid #f0f4f8;background:${n.is_read ? '#fff' : '#f0f8ff'};">
+          <div style="width:8px;height:8px;border-radius:50%;background:${n.is_read ? '#ddd' : '#ef4444'};margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-size:13px;color:#051923;font-weight:${n.is_read ? '400' : '600'};">${n.message || n.title || 'New notification'}</div>
+            <div style="font-size:11px;color:#9ab;margin-top:3px;">${n.created_at ? new Date(n.created_at).toLocaleDateString() : ''}</div>
+          </div>
+        </div>`).join('');
+    } catch(_) {
+      list.innerHTML = '<p style="padding:14px;text-align:center;color:#9ab;font-size:13px;">No notifications yet.</p>';
+    }
+  }
+
+  // Profile dropdown click
+  function toggleProfileDropdown(e) {
+    e.stopPropagation();
+    const dd = document.querySelector('.nav-dropdown');
+    dd.classList.toggle('open');
+    document.getElementById('notifDropdown').style.display = 'none';
+    document.getElementById('msgDropdown').style.display = 'none';
+  }
+
+  // Dark mode
+  function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+    const btn = document.getElementById('dark-mode-btn');
+    btn.innerHTML = isDark
+      ? '<i class="fa-solid fa-sun"></i> Light Mode'
+      : '<i class="fa-solid fa-moon"></i> Dark Mode';
+  }
+  if (localStorage.getItem('darkMode') === '1') {
+    document.body.classList.add('dark-mode');
+    const btn = document.getElementById('dark-mode-btn');
+    if (btn) btn.innerHTML = '<i class="fa-solid fa-sun"></i> Light Mode';
+  }
+
+  async function loadMsgDropdown() {
+    const list = document.getElementById('msgDropList');
+    list.innerHTML = '<p style="padding:14px;text-align:center;color:#9ab;font-size:13px;">Loading…</p>';
+    try {
+      const hdr = { 'Authorization': 'Bearer ' + Auth.token() };
+      const [r1, r2] = await Promise.all([
+        fetch('/api/chat/conversations', { headers: hdr }),
+        fetch('/api/chat/direct',        { headers: hdr })
+      ]);
+      const [pc, dc] = await Promise.all([r1.json(), r2.json()]);
+      const me = Auth.user();
+      const all = [
+        ...pc.map(c => ({ id: c.id, type: 'proposal', name: me.role === 'client' ? c.freelancer_name : c.client_name, last: c.last_message, unread: c.unread_count || 0 })),
+        ...dc.map(c => ({ id: c.id, type: 'direct',   name: c.other_name, last: c.last_message, unread: c.unread_count || 0 }))
+      ].sort((a, b) => (b.unread - a.unread)).slice(0, 6);
+
+      if (!all.length) { list.innerHTML = '<p style="padding:14px;text-align:center;color:#9ab;font-size:13px;">No messages yet.</p>'; return; }
+
+      list.innerHTML = all.map(c => `
+        <a href="chat.html?type=${c.type}&id=${c.id}" style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid #f0f4f8;text-decoration:none;color:inherit;background:${c.unread > 0 ? '#f0f8ff' : '#fff'};">
+          <div style="width:36px;height:36px;border-radius:50%;background:#0077B8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">${(c.name||'U').charAt(0).toUpperCase()}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:600;color:#051923;">${c.name || 'User'}</div>
+            <div style="font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.last || 'No messages yet'}</div>
+          </div>
+          ${c.unread > 0 ? `<span style="background:#22c55e;color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;display:flex;align-items:center;justify-content:center;">${c.unread}</span>` : ''}
+        </a>`).join('');
+
+      const total = all.reduce((s, c) => s + c.unread, 0);
+      const badge = document.getElementById('msgCount');
+      if (total > 0) { badge.textContent = total > 99 ? '99+' : total; badge.style.display = 'flex'; }
+      else badge.style.display = 'none';
+    } catch(_) { document.getElementById('msgDropList').innerHTML = '<p style="padding:14px;text-align:center;color:#e00;font-size:13px;">Failed to load</p>'; }
+  }
+</script>
+</body>
+</html>
