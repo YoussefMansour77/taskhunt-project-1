@@ -18,7 +18,7 @@
     /* Invert the whole page */
     html[data-theme="dark"] body {
       filter: invert(1) hue-rotate(180deg);
-      background: #ffffff !important;
+      background-color: #ffffff !important;
       min-height: 100vh;
     }
 
@@ -60,6 +60,25 @@
     html[data-theme="dark"] body.dark-mode .trending-header h2 {
       color: revert !important;
     }
+
+    /* Logo: prevent double-inversion so it appears light (single-inverted) on dark navbar */
+    html[data-theme="dark"] .th-logo img,
+    html[data-theme="dark"] .logo img { filter: none !important; }
+
+    /* Hero heading: force black so it inverts to visible white */
+    html[data-theme="dark"] .hero-content h1,
+    html[data-theme="dark"] .hero-content h1 span,
+    html[data-theme="dark"] .hero-content p { color: #000 !important; }
+
+    /* Feature cards text: force black so it inverts to visible white */
+    html[data-theme="dark"] .feature-card h3,
+    html[data-theme="dark"] .feature-card p,
+    html[data-theme="dark"] .features-title,
+    html[data-theme="dark"] .features-subtitle { color: #000 !important; }
+
+    /* Filter bar selects: force dark text so it inverts to visible white */
+    html[data-theme="dark"] .filter-container select,
+    html[data-theme="dark"] .filter-container option { color: #000 !important; background: #fff !important; }
 
     /* Re-invert media so images/icons keep original colors */
     html[data-theme="dark"] img,

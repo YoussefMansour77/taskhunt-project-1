@@ -862,7 +862,7 @@
                     </div>
                     <div class="hero-buttons">
                         <button class="action-btn blue" id="findProjectBtn">Find a Project</button>
-                        <a href="signup/ask-signup.html"><button class="action-btn outline" id="createProfileBtn">Create Profile</button></a>
+                        <a href="signup/ask-signup.html" id="createProfileLink"><button class="action-btn outline" id="createProfileBtn">Create Profile</button></a>
                     </div>
                 </div>
             </div>
@@ -1124,7 +1124,7 @@
         document.getElementById("searchBtn").addEventListener("click", filterJobs);
         document.getElementById("loadMoreBtn").addEventListener("click", loadMore);
         document.getElementById("findProjectBtn").addEventListener("click", () => {
-            window.scrollTo({ top: document.querySelector(".page-layout").offsetTop - 30, behavior: "smooth" });
+            window.location.href = 'post-a-job.html';
         });
         document.getElementById("searchKeyword")?.addEventListener("keypress", e => { if (e.key === "Enter") filterJobs(); });
 
@@ -1208,6 +1208,14 @@
 
 <script src="../assets/js/api.js"></script>
 <script src="/assets/js/navbar.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (Auth.isLoggedIn()) {
+      const link = document.getElementById('createProfileLink');
+      if (link) link.style.display = 'none';
+    }
+  });
+</script>
 <script>
   let applyJobId = null;
 

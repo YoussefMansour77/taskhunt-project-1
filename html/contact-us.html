@@ -1,18 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-    content="width=device-width,initial-scale=1.0">
-    <title> Contact </title>
-    <!-- Bootstrap CSS -->
-    <link href="bootstrap.css" rel="stylesheet">
-    <!-- CSS -->
-    <link rel="stylesheet" href="../assets/css/contact-us.css">
-    <!-- أيقونات بوتاستراب -->
-    <link rel="stylesheet" href="css/all.min.css">
-   
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Contact Us — Task Hunt</title>
+  <link rel="stylesheet" href="../assets/css/contact-us.css">
+  <link rel="stylesheet" href="css/all.min.css">
   <script src="/assets/js/theme.js"></script>
 </head>
 
@@ -22,7 +16,8 @@
   <nav class="nav">
     <div class="logo">
       <a href="home.html" class="logo">
-      <img src="images/logo.png" alt="Logo"></a>
+        <img src="../assets/images/logo.png" alt="Logo">
+      </a>
     </div>
     <ul>
       <li><a href="#">Find Work</a></li>
@@ -35,131 +30,153 @@
       </li>
     </ul>
   </nav>
-      <!-- نموذج التواصل -->
-       <div class="parent">
-       <div class="contact-box">
-       <form id="contactForm">
-       <div class="mb-3">
-       <h2>Drop us a massage</h2>
-       <h5>We'd Love to hear from you!</h5>
-       <label class="form-label">Name</label>
-       <input type="text" class="form-control" placeholder=" Enter your Name " required>
-       </div>
-          <div class="mb-3">
-           <label class="form-label">Email</label>
-           <input type="email" class="form-control" placeholder=" Enter your Email " required>
-           </div>
-            <div class="mb-3">
-             <label class="form-label">Phone Number</label>
-             <input type="text" class="form-control" placeholder=" Enter your Phone Number "required>
-            </div>
-             <div class="mb-3">
-              <label class="form-label">Message</label>
-              <textarea class="form-control" rows="4" placeholder=" Enter your Message  "required></textarea>
-             </div>
-              <button type="submit" class="btn btn-primary">Send</button>
-              </form>
-         </div>
-       </div>
 
-    <!-- ملف الجافا سكربت -->
-    <script src="bootstrap.js"></script>
+  <!-- HERO -->
+  <div class="contact-hero">
+    <h1>Get in Touch</h1>
+    <p>Have a question or want to work with us? We're always happy to hear from you.</p>
+  </div>
 
-    <!-- نافذة الرسالة -->
-    <div id="popupMessage">
+  <!-- MAIN CONTENT -->
+  <div class="contact-main">
 
-        your massage has been sent successfully ✅ and will be answered within 24 our.
+    <!-- FORM CARD -->
+    <div class="contact-form-card">
+      <h2>Send us a Message</h2>
+      <p class="subtitle">We'll get back to you within 24 hours.</p>
+
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Your full name" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" placeholder="+20 100 000 0000">
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="5" placeholder="Tell us how we can help..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-send">
+          <i class="fas fa-paper-plane" style="margin-right:8px;"></i>Send Message
+        </button>
+      </form>
     </div>
 
-    <!-- قسم التواصل -->
-    <section class="contact-section">
-        <div class="contact-container">
-            <div class="contact-buttons"></div>
-            
-            <div class="contact-info">
-                <div class="tagline">Contact Now</div>
+    <!-- INFO COLUMN -->
+    <div class="contact-info-card">
 
-                <div class="contact-item">
-                <i class="fas fa-phone" style="color: darkblue;"></i>
-                <div class="phone-container">
-                <span class="phone">+20 12345-65412</span>
-                </div>
-                </div>
+      <div class="info-top-card">
+        <h3>Contact Information</h3>
+        <p>Reach out through any of the channels below and we'll respond as soon as possible.</p>
 
-                <div class="contact-item">
-                <i class="fas fa-envelope" style="color: darkblue;"></i>
-                <div class="email-container">
-                <span class="email">taskhunt@gmail.com</span>
-                </div>
-                </div> 
-
-                <div class="contact-item">
-                <i class="fas fa-map-mark-alt" style="color: darkblue;"></i>
-                <div class="address-container">
-                <span class="address">1993 hunter, Bani suef, Egypt</span>
-                </div>
-                </div>
-            </div>
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-phone"></i></div>
+          <div class="info-text">
+            <span>Phone</span>
+            <strong>+20 12345-65412</strong>
+          </div>
         </div>
-    </section>
 
-    <footer class="footer">
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-envelope"></i></div>
+          <div class="info-text">
+            <span>Email</span>
+            <strong>taskhunt@gmail.com</strong>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="info-text">
+            <span>Address</span>
+            <strong>1993 Hunter St, Bani Suef, Egypt</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="response-badge">
+        <i class="fas fa-clock"></i>
+        <p>Average response time: <strong>under 24 hours</strong> on business days.</p>
+      </div>
+
+      <div class="social-card">
+        <h4>Follow Us</h4>
+        <div class="social-links">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+          <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" alt="TikTok">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUCCESS POPUP -->
+  <div id="popupMessage">
+    ✅ Your message has been sent successfully!<br>We'll get back to you within 24 hours.
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
     <div class="footer-container">
-
-        <div class="footer-col">
-            <h3>Task Hunt</h3>
-            <ul>
-                <li><a href="#">About Task Hunt</a></li>
-                <li><a href="#">How It Works</a></li>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Rights Protection</a></li>
-            </ul>
+      <div class="footer-col">
+        <h3>Task Hunt</h3>
+        <ul>
+          <li><a href="#">About Task Hunt</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Rights Protection</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Community</h3>
+        <ul>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Discussions</a></li>
+          <li><a href="#">Topics</a></li>
+          <li><a href="#">User Experiences</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="icon" alt="Facebook">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="icon" alt="Instagram">
+          <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="icon" alt="TikTok">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="icon" alt="Twitter">
         </div>
-
-        <div class="footer-col">
-            <h3>Community</h3>
-            <ul>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Discussions</a></li>
-                <li><a href="#">Topics</a></li>
-                <li><a href="#">User Experiences</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-col">
-            <h3>Follow Us</h3>
-            <div class="social-icons">
-                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="icon" alt="Facebook">
-                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="icon" alt="Instagram">
-                <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="icon" alt="TikTok">
-                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="icon" alt="Twitter">
-            </div>
-        </div>
-
+      </div>
     </div>
-
     <div class="footer-bottom">
-        <p>© 2025 Task Hunt — All rights reserved</p>
+      <p>© 2025 Task Hunt — All rights reserved</p>
     </div>
-</footer>
+  </footer>
 
-    <script src="../assets/js/jquery-3.7.1.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/jquery-3.7.1.min.js"></script>
+  <script src="bootstrap.bundle.min.js"></script>
 
+  <script>
+    $("#contactForm").submit(function (e) {
+      e.preventDefault();
+      $("#popupMessage").fadeIn(400).delay(2500).fadeOut(400);
+      $(this).trigger("reset");
+    });
+  </script>
 
-    <script>$("#contactForm").submit(function (e) {
-            e.preventDefault();
-
-            $("#popupMessage")
-                .fadeIn(500)
-                .delay(500)
-                .fadeOut(500);
-
-            $(this).trigger("reset");
-        });</script>
-
-
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/navbar.js"></script>
 </body>
 
 </html>

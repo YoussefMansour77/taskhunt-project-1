@@ -1,1073 +1,897 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskHunt | Community Feed</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posts — TaskHunt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="/assets/js/theme.js"></script>
+  <style>
+    :root {
+      --primary: #0077B8;
+      --primary-light: #e8f4fd;
+      --accent: #00A8FF;
+      --dark: #051923;
+      --text: #1e2d3d;
+      --muted: #6b7a8d;
+      --border: #e5eaf2;
+      --bg: #f4f7fb;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: var(--white);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .logo img { height: 40px; width: auto; display: block; object-fit: contain; }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--primary); }
+
+    .auth-btns { display: flex; gap: 10px; align-items: center; }
+
+    .btn-login {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-signup {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* ── HERO ── */
+    .page-hero {
+      background: linear-gradient(135deg, #051923 0%, #0a4a7a 60%, #00A8FF 100%);
+      color: #fff;
+      padding: 52px 24px 48px;
+      text-align: center;
+    }
+
+    .page-hero h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .page-hero p {
+      font-size: 16px;
+      opacity: 0.82;
+      margin-bottom: 28px;
+    }
+
+    .btn-post-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      color: var(--primary);
+      border: none;
+      padding: 13px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn-post-hero:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      padding: 24px 24px 10px;
+    }
+
+    .filter-wrap {
+      background: var(--white);
+      border-radius: 50px;
+      padding: 10px 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .filter-wrap input {
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 14px;
+      outline: none;
+      width: 220px;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .filter-wrap input:focus { border-color: var(--accent); }
+
+    .filter-wrap select {
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      padding: 8px 14px;
+      font-size: 14px;
+      outline: none;
+      background: var(--white);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-search {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* ── LAYOUT ── */
+    .feed-layout {
+      max-width: 860px;
+      margin: 24px auto 80px;
+      padding: 0 24px;
+    }
+
+    .feed-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-left: 4px;
+    }
+
+    /* ── POST CARD ── */
+    .post-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+
+    .post-card:hover {
+      box-shadow: 0 12px 32px rgba(0,100,180,0.09);
+      transform: translateY(-2px);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+
+    .author-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .author-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .author-avatar-init {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .author-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .post-time {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .post-badge {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .badge-job {
+      background: #e8f4fd;
+      color: #0077B8;
+    }
+
+    .badge-service {
+      background: #eafaf1;
+      color: #1a9e5c;
+    }
+
+    .post-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: #0f2a45;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .post-desc {
+      font-size: 14px;
+      color: #4b5a6a;
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .post-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .post-tags span {
+      background: #f3f6fa;
+      color: #4b5a6a;
+      padding: 4px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .post-budget {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .post-budget span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .card-actions { display: flex; gap: 10px; }
+
+    .btn-apply {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-apply:hover { background: #005f97; transform: scale(0.97); }
+
+    .btn-msg {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      padding: 9px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-msg:hover { background: #d0e9f8; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: #c8d5e3;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 { font-size: 18px; color: #3a4a60; margin-bottom: 8px; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5,25,35,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: var(--white);
+      border-radius: 20px;
+      width: 92%;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 36px 40px;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.88); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #9aacbe;
+      transition: color 0.2s;
+    }
+
+    .modal-close:hover { color: var(--dark); }
+
+    .modal-box h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .modal-box .modal-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .form-field {
+      margin-bottom: 18px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #3a4a60;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 7px;
+    }
+
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      padding: 11px 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fafcff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,168,255,0.12);
+      background: #fff;
+    }
+
+    .form-field textarea { resize: vertical; min-height: 100px; }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn-submit-post {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-submit-post:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,168,255,0.3);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #051923;
+      padding: 48px 32px 20px;
+      color: #fff;
+    }
+
+    .footer-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 36px;
+    }
+
+    .footer-col { flex: 1; min-width: 180px; }
+
+    .footer-col h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col ul li { margin-bottom: 10px; }
+
+    .footer-col ul li a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover { color: var(--accent); }
+
+    .social-icons { display: flex; gap: 12px; margin-top: 10px; }
+
+    .social-icon {
+      width: 30px;
+      height: 30px;
+      filter: brightness(0) invert(1);
+      opacity: 0.65;
+      transition: opacity 0.2s;
+      cursor: pointer;
+    }
+
+    .social-icon:hover { opacity: 1; }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 24px;
+      margin-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    @media (max-width: 600px) {
+      .modal-box { padding: 26px 20px; }
+      .form-row-2 { grid-template-columns: 1fr; }
+      .card-top { flex-direction: column; }
+      .page-hero h1 { font-size: 26px; }
+    }
+  </style>
 </head>
-
-<style>
-:root {
-  --c1: #00A8FF;
-  --c2: #0090E0;
-  --c3: #0077B8;
-  --c4: #051923;
-  --c5: #ffffff;
-  --white: #ffffff;
-  --light: #e6f7ff;
-  
-}
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f7f9fc;
-    margin: 0;
-    direction: ltr; /* English Direction */
-}
-
-.container {
-  max-width: 700px; 
-  margin: 40px auto; 
-  padding: 0 20px; 
-  min-height: 80vh; 
-}
- /* NAVBAR */
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px 30px;
-  height: 50px;
-  background: #ffffff;
-}
-/* NAVBAR FIX */
-
-.logo img {
-    margin-top: 25px;
-    margin-left: 60px;
-  height: 40px;
-  align-items: center;
-  padding-bottom: 25px;
-}
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 30px;
-}
-nav ul li a {
-  color: var(--c4);
-  text-decoration: none;
-  font-size: 18px;
-  transition: 0.3s;
-}
-nav ul li a:hover {
-  color: var(--c3);
-}
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 30px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%); 
-}
-.nav-links li a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-}
-/* BUTTONS */
-
-.auth-buttons .btn {
-    width: 90px; 
-    height: 35px;
-    padding: 8px 0; 
-    text-align: center;
-    display: inline-block;
-    border-radius: 8px; 
-    font-size: 17px;
-    font-weight: 500;
-    cursor: pointer;
-}
-.login-blue {
-    background-color: #f0f6ff;
-    color: white;
-    border: none;
-}
-/* LOGIN BUTTON */
-
-.login-btn {
-    background-color: transparent;
-    color: var(--c3);
-    
-}
-.auth-buttons .btn:hover {
-    opacity: 0.8;
-    transform: translateY(-0.5px);
-}
-.signup-blue {
-  background-color: var(--c3);
-  color: white;
-}
-
-/* BUTTONS */
-.btn {
-  padding: 10px 18px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
-.user-menu-container {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* المسافة بين الجرس والبروفايل */
-}
-
-.nav-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid var(--c3);
-    transition: 0.3s ease;
-}
-
-.nav-avatar:hover {
-    transform: translateY(-3px);
-}
-
-.profile-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-/* القائمة اللي بتفتح لما اقرب   من البروفايل */
-.nav-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 45px;
-    background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    min-width: 140px;
-    z-index: 1000;
-}
-
-.profile-wrapper:hover .nav-dropdown {
-    display: block;
-}
-
-.nav-dropdown a {
-    display: block;
-    padding: 10px 15px;
-    color: var(--c4);
-    text-decoration: none;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
-}
-
-.nav-dropdown a:last-child { border: none; }
-
-.nav-dropdown a:hover {
-    background: #f8f9fa;
-    color: var(--c3);
-}
-
-/* ستايل الجرس والتنبيهات */
-.notifications {
-    position: relative;
-    font-size: 20px;
-    color: var(--c4);
-    cursor: pointer;
-}
-
-/* ت(Bell Wobble Animation) */
-.animated-bell:hover .bell-icon {
-    animation: bell-wobble 0.6s ease-in-out infinite; /* سرعة ونوع الحركة */
-}
-
-.bell-dot {
-    position: absolute;
-    bottom: -3px;
-    right: 50%; 
-    transform: translateX(50%);
-    font-size: 6px; /* حجم النقطة */
-    color: var(--c4); 
-}
-
-/* الاهتزاز */
-@keyframes bell-wobble {
-    0% { transform: rotate(0deg); }
-    15% { transform: rotate(10deg); }
-    30% { transform: rotate(-10deg); }
-    45% { transform: rotate(5deg); }
-    60% { transform: rotate(-5deg); }
-    75% { transform: rotate(2deg); }
-    100% { transform: rotate(0deg); }
-}
-
-
-
-
-form input, form textarea, form select {
-    width: 100%;
-    padding: 10px 15px !important;
-    border: 2px solid var(--light);
-    border-radius: 12px;
-    font-size: 14px;
-    transition: all 0.3s ease-in-out; 
-    background: #fdfdfe;
-    box-sizing: border-box;
-}
-
-form input:focus, form textarea:focus, form select:focus {
-    border-color: var(--c1);
-    background: #fff;
-    outline: none;
-    box-shadow: 0 0 15px rgba(0, 168, 255, 0.25);
-    transform: translateY(-2px); 
-}
-
-.form-row {
-display: grid;
-grid-template-columns: 1fr 1fr;
-justify-content: space-between;
-gap: 20px;
-margin-top: 13;
-align-items: flex-start;
-}
-
-.field-group-half {
-    width: calc(50% - 10px);
-    display: flex;
-    flex: 1 1 0;
-}
-
-.submit-btn {
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    border: none;
-    background: linear-gradient(135deg, var(--c1), var(--c3));
-    color: white;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 15px rgba(0, 168, 255, 0.2);
-}
-
-.submit-btn:hover {
-   opacity: 0.8;
-   transform: translateY(-0.5px);
-   background-color: var(--c3);
-   color: white;
-   transform: translateY(-3px) scale(1.02); 
-   box-shadow: 0 12px 20px rgba(0, 168, 255, 0.3);
-}
-
-.close-btn {
-    position: absolute;
-    right: 20px; top: 15px;
-    cursor: pointer;
-    font-size: 20px;
-    color: var(--c4);
-    opacity: 0.5;
-    transition: 0.3s;
-}
-.close-btn:hover {
-    opacity: 1;
-    transform: rotate(90deg);
-    color: var(--c1);
-}
-/* FEED CARDS */
-.create-post-card {
-    background: var(--white); 
-    padding: 20px; 
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(5, 25, 35, 0.05); 
-    margin-bottom: 25px;
-}
-.user-input { 
-    display: flex; 
-    align-items: center; 
-    gap: 15px; 
-    border-bottom: 1px solid #eee; 
-    padding-bottom: 15px; 
-}
-.avatar-placeholder { 
-    width: 45px; 
-    height: 45px; 
-    background: var(--light); 
-    border-radius: 50%; 
-    display: grid; 
-    place-items: center; 
-    color: var(--c2); 
-}
-.user-input button {
-    flex-grow: 1; 
-    border: none; 
-    background: #f0f2f5;
-    padding: 12px 20px; 
-    border-radius: 25px; 
-    text-align: left;
-    color: #65676b; 
-    cursor: pointer;
-}
-
-.post-card {
-    background: var(--white); 
-    padding: 25px; 
-    border-radius: 12px;
-    margin-bottom: 20px; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border-top: 5px solid var(--c2); /* Accent color on the left */
-}
-.post-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 10px; 
-}
-.badge { 
-    padding: 4px 12px; 
-    border-radius: 6px; 
-    font-size: 11px; 
-    font-weight: 800; 
-    text-transform: uppercase; 
-}
-.badge-client { 
-    background: var(--c1); 
-    color: white; 
-}
-.badge-freelancer { 
-    background: var(--c4); 
-    color: white; 
-}
-.post-title { 
-    font-size: 19px; 
-    font-weight: 700; 
-    color: var(--c3); 
-    margin: 10px 0; 
-}
-.post-budget { 
-    display: inline-block; 
-    background: var(--light); 
-    color: var(--c2); 
-    padding: 5px 12px; 
-    border-radius: 8px; 
-    font-weight: bold; 
-}
-/* تأثير النبضة عند الضغط على زرار Interested */
-.active-like i {
-    animation: pulse 0.3s ease-out;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.4); }
-    100% { transform: scale(1.2); }
-}
-
-/* تحسين شكل الانبوت بتاع التعليقات */
-.comment-box input:focus {
-    outline: none;
-    border-color: #0077B8 !important;
-    box-shadow: 0 0 5px rgba(0,119,184,0.2);
-}
-/* MODAL */
-
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 99999 !important; 
-    left: 0; 
-    top: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(5, 25, 35, 0.7);
-    backdrop-filter: blur(6px); 
-    justify-content: center;
-    align-items: flex-start;
-    padding-bottom: 20px; 
-}
-
-.modal-content {
-    background: var(--white);
-    padding: 10px 60px !important;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 440px; 
-    height: 80%;
-    position: relative;
-    box-shadow: 0 15px 40px rgba(0, 168, 255, 0.2); 
-    border: 1px solid rgba(0, 168, 255, 0.2);
-    overflow-y: auto !important;
-    display: flex;
-    flex-direction: column;
-    animation: modalSpring 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes modalSpring {
-    0% { 
-    transform: scale(0.7); 
-    opacity: 0; }
-    100% { 
-    transform: scale(1); 
-    opacity: 1; }
-}
-.modal-header h2 {
-  color: var(--c2);
-  margin-left: 130px;
-}
-.modal-header p {
-margin-left: 65px;
-}
-.modal-content { 
-    background: white; 
-    margin: 5% auto; 
-    padding: 30px; 
-    border-radius: 15px; 
-    width: 90%; 
-    max-width: 500px; 
-    position: relative; 
-}
-.close-btn { 
-    position: absolute; 
-    right: 20px; 
-    top: 15px; 
-    cursor: pointer; 
-    font-size: 24px; 
-}
-.submit-btn { 
-    width: 100%; 
-    margin-top: 20px; 
-    padding: 15px; 
-    border: none; 
-    background: var(--c3); 
-    color: white; 
-    border-radius: 8px; 
-    font-weight: bold; 
-    cursor: pointer; 
-}
-.send-btn {
-    transition: all 0.3s ease;
-}
-
-.send-btn:hover {
-    opacity: 0.8; 
-    background-color: var(--c3) !important;
-    color: white;
-}
-
-/* Footer */ 
-.footer {
-  background: #051923;
-  padding: 20px 10px;
-  font-family: "Cairo", sans-serif;
-  direction: ltr;
-  text-align: left;
-  color: #ffffff;
-}
-
-.footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-
-.footer-col {
-  flex: 1;
-  width: 30%;
-  min-width: 200px;
-}
-
-/* تخصيص مساحة أكبر للفورم */
-.contact-col {
-  flex: 1; 
-  min-width: 200px;
-}
-
-.footer-col h3 {
-  font-size: 22px;
-  margin-bottom: 15px;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.footer-col ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-col ul li {
-  margin-bottom: 14px;
-}
-
-.footer-col ul li a {
-  text-decoration: none;
-  color: #adb5bd;
-  font-size: 16px;
-  transition: 0.3s;
-}
-
-.footer-col ul li a:hover {
-  color: #ffffff;
-  padding-left: 5px;
-  opacity: 0.8;
-}
-
-/* Contact Form Styling */
-.contact-box h3 {
-  margin-bottom: 7px;
-}
-
-.contact-box p {
-  font-size: 14px;
-  color: #adb5bd;
-  margin-bottom: 10px;
-}
-
-.form-group {
-  margin-bottom: 13px;
-}
-
-.footer-input {
-  width: 92%;
-  padding: 12px 15px;
-  background: rgba(255, 255, 255, 0.05); 
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-  transition: 0.3s;
-}
-
-.footer-input:focus {
-  border-color: #00a8e8; 
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.footer-btn {
-  width: 100%;
-  padding: 12px;
-  background: #00a8e8;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.footer-btn:hover {
-  background: #007ea7;
-  transform: translateY(-2px);
-}
-
-/* Social Icons */
-.social-section {
-    justify-items: left;
-  margin-top: 30px;
-}
-
-.social-icons {
-  display: flex;
-  gap: 15px;
-}
-
-.social-icon {
-  width: 28px;
-  height: 28px;
-  filter: grayscale(1) invert(1); /* جعل الأيقونات بيضاء لتناسب التصميم */
-  opacity: 0.7;
-  transition: 0.3s;
-}
-
-.social-icon:hover {
-  opacity: 1;
-  filter: none; /* ترجع لألوانها الأصلية عند المرور عليها */
-  transform: scale(1.2);
-}
-
-/* Bottom Bar */
-.footer-bottom {
-  text-align: center;
-  padding: 20px 0;
-  margin-top: 40px;
-  font-size: 13px;
-  color: #6c757d;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-  .footer-container {
-    flex-direction: column;
-  }
-  .footer-col, .contact-col {
-    width: 100%;
-  }
-}
-/*Share Post */
-.share-post-section {
-    width: 100%;
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    padding: 50px 0; 
-    clear: both;     
-}
-/*btn تنسيق  */
-.share-btn {
-    background-color: var(--c3); 
-    color: white;
-    padding: 15px 35px;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    border-radius: 50px; 
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease-in-out; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-
-.share-btn:hover {
-    transform: translateY(-8px); 
-    background-color: var(--c2);  
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
-}
-.user-menu-container {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* المسافة بين الجرس والبروفايل */
-}
-
-.nav-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid var(--c3);
-    transition: 0.3s ease;
-}
-
-.nav-avatar:hover {
-    transform: translateY(-3px);
-}
-
-.profile-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-/* القائمة اللي بتفتح لما اقرب   من البروفايل */
-.nav-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 45px;
-    background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    min-width: 140px;
-    z-index: 1000;
-}
-
-.profile-wrapper:hover .nav-dropdown {
-    display: block;
-}
-
-.nav-dropdown a {
-    display: block;
-    padding: 10px 15px;
-    color: var(--c4);
-    text-decoration: none;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
-}
-
-.nav-dropdown a:last-child { border: none; }
-
-.nav-dropdown a:hover {
-    background: #f8f9fa;
-    color: var(--c3);
-}
-
-/* ستايل الجرس والتنبيهات */
-.notifications {
-    position: relative;
-    font-size: 20px;
-    color: var(--c4);
-    cursor: pointer;
-}
-
-/* ت(Bell Wobble Animation) */
-.animated-bell:hover .bell-icon {
-    animation: bell-wobble 0.6s ease-in-out infinite; /* سرعة ونوع الحركة */
-}
-
-.bell-dot {
-    position: absolute;
-    bottom: -3px;
-    right: 50%; 
-    transform: translateX(50%);
-    font-size: 6px; /* حجم النقطة */
-    color: var(--c4); 
-}
-
-/* الاهتزاز */
-@keyframes bell-wobble {
-    0% { transform: rotate(0deg); }
-    15% { transform: rotate(10deg); }
-    30% { transform: rotate(-10deg); }
-    45% { transform: rotate(5deg); }
-    60% { transform: rotate(-5deg); }
-    75% { transform: rotate(2deg); }
-    100% { transform: rotate(0deg); }
-}
-</style>
 
 <body>
 
-   
-<!-- NAVBAR -->
-  <nav class="nav">
-  <div class="logo">
-    <a href="home.html">
-      <img src="../assets/images/logo.png" alt="Logo">
-    </a>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="home.html"><img src="../assets/images/logo.png" alt="TaskHunt"></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="work.html">Find Work</a></li>
+      <li><a href="hie-talent.html">Hire Talent</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact-us.html">Contact</a></li>
+    </ul>
+    <div class="auth-btns">
+      <button class="btn-login" onclick="location.href='login.html'">Login</button>
+      <button class="btn-signup" onclick="location.href='signup/ask-signup.html'">Sign Up</button>
+    </div>
+  </nav>
+
+  <!-- TOP BAR -->
+  <div style="max-width:860px;margin:28px auto 0;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h2 style="font-size:22px;font-weight:700;color:#0f2a45;margin-bottom:3px;">Open Opportunities</h2>
+      <p style="font-size:13px;color:#6b7a8d;">Jobs posted by clients and services offered by freelancers</p>
+    </div>
+    <button id="openModalBtn" style="background:#0077B8;color:#fff;border:none;padding:11px 24px;border-radius:30px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;">
+      <i class="fas fa-plus"></i> Post Something
+    </button>
   </div>
 
-
-  <ul class="nav-links">
-    <li><a href="../work.html">Find Work</a></li>
-    <li><a href="hie-talent.html">Hire Talent</a></li>
-    <li><a href="#about-section">About</a></li>
-    <li><a href="#contact-section">Contact</a></li>
-  </ul>
-<div class="user-menu-container">
-    <div class="notifications animated-bell">
-        <i class="fa-solid fa-bell bell-icon"></i>
-        <i class="fa-solid fa-circle bell-dot"></i>
+  <!-- FILTER BAR -->
+  <div class="filter-bar" style="padding-top:16px;">
+    <div class="filter-wrap">
+      <input type="text" id="searchInput" placeholder="Search title or keywords…">
+      <select id="typeFilter">
+        <option value="all">All Types</option>
+        <option value="job">Jobs (Hiring)</option>
+        <option value="service">Services</option>
+      </select>
+      <button class="btn-search" id="searchBtn"><i class="fas fa-search"></i> Search</button>
     </div>
-    
-    <div class="profile-wrapper">
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="nav-avatar">
-        <div class="nav-dropdown">
-            <a href="dashboard/dash-client.html">Dashboard</a>
-            <a href="home.html">Logout</a>
+  </div>
+
+  <!-- FEED -->
+  <div class="feed-layout">
+    <div class="feed-meta" id="feedMeta"></div>
+    <div id="postsFeed"></div>
+  </div>
+
+  <!-- CREATE POST MODAL -->
+  <div class="modal-overlay" id="postModal">
+    <div class="modal-box">
+      <button class="modal-close" id="closeModalBtn">&times;</button>
+      <h2>Create a New Post</h2>
+      <p class="modal-sub">Share a job opportunity or offer your services to the community.</p>
+
+      <form id="postForm">
+        <div class="form-field">
+          <label>I am looking to</label>
+          <select id="postType">
+            <option value="client">Hire a Freelancer (Post a Job)</option>
+            <option value="freelancer">Offer my Services</option>
+          </select>
         </div>
+
+        <div class="form-field">
+          <label>Title</label>
+          <input type="text" id="postTitle" placeholder="e.g., UI/UX Designer for mobile app" required>
+        </div>
+
+        <div class="form-field">
+          <label>Description</label>
+          <textarea id="postContent" rows="4" placeholder="Describe the task or your expertise in detail…" required></textarea>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-field">
+            <label>Budget (USD)</label>
+            <input type="number" id="postBudget" placeholder="e.g. 500" required min="1">
+          </div>
+          <div class="form-field">
+            <label>Category / Skills</label>
+            <input type="text" id="postTags" placeholder="React, Design, SQL…">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit-post">
+          <i class="fas fa-paper-plane"></i> Publish Post
+        </button>
+      </form>
     </div>
-</div>
-</nav>
+  </div>
 
-<main class="container">
-    <section class="create-post-card">
-        <div class="user-input">
-            <div class="avatar-placeholder"><i class="fas fa-user"></i></div>
-            <button id="openModal">What's on your mind? Post a job or offer a service...</button>
-        </div>
-        <div class="post-options">
-            <span><i class="fas fa-briefcase"></i> Post a Job</span>
-            <span><i class="fas fa-laptop-code"></i> Offer a Service</span>
-        </div>
-    </section>
-
-    <div id="postsFeed">
-        </div>
-</main>
-
-<div id="postModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <div class="modal-header">
-            <h2 class="modal-title">Create a New Post</h2>
-            <p class="modal-subtitle">Share your project or services with the community</p>
-        </div>
-        
-        <form id="postForm">
-            <div class="field-group">
-                <label><i class="fas fa-tag"></i> I am looking to:</label>
-                <select id="postType" required>
-                    <option value="client">Hire a Freelancer (Client)</option>
-                    <option value="freelancer">Offer my Services (Freelancer)</option>
-                </select>
-            </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-pen"></i> Post Title</label>
-                <input type="text" id="postTitle" placeholder="e.g., UI/UX Designer for TaskHunt" required>
-            </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-align-left"></i> Description</label>
-                <textarea id="postContent" placeholder="Describe the task or your expertise in detail..." rows="4" required></textarea>
-            </div>
-            
-            <div class="form-row">
-                <div class="field-group">
-                    <label><i class="fas fa-dollar-sign"></i> Budget </label>
-                    <input type="number" id="postBudget" placeholder="500" required>
-                </div>
-                <div class="field-group">
-                    <label><i class="fas fa-clock"></i> Woring Hours </label>
-                    <input type="number" id="postHours" placeholder="0-12" 
-                    min="0" max="12"
-                    oninput="if(value>12)value=12;if(value<0)value=0;">
-                </div>
-            </div>
-
-                <div class="field-group">
-                    <label><i class="fas fa-code"></i> Skills / Tags</label>
-                    <input type="text" id="postTags" placeholder="React, SQL, Figma">
-                </div>
-            
-            <button type="submit" class="submit-btn">
-                <span>Publish Post</span>
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </form>
-    </div>
-</div>
-          
-
-<!-- FOOTER -->
-     <footer class="footer">
-  <div class="footer-container">
-
-    <div class="footer-col">
-      <h3>Task Hunt</h3>
-      <ul>
-        <li><a href="#">About Task Hunt</a></li>
-        <li><a href="#">How It Works</a></li>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Rights Protection</a></li>
-      </ul>
-      <div class="social-section">
-        <h3>Follow Us</h3>
-        <div class="social-icons">
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3>Task Hunt</h3>
+        <ul>
+          <li><a href="#">About Task Hunt</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Rights Protection</a></li>
+        </ul>
+        <div class="social-icons" style="margin-top:20px;">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="social-icon" alt="Facebook">
           <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="social-icon" alt="Instagram">
           <img src="https://cdn-icons-png.flaticon.com/512/3046/3046125.png" class="social-icon" alt="TikTok">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" class="social-icon" alt="Twitter">
         </div>
       </div>
-    </div>
-
-    <div class="footer-col">
-      <h3>Community</h3>
-      <ul>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Discussions</a></li>
-        <li><a href="#">Topics</a></li>
-        <li><a href="#">User Experiences</a></li>
-      </ul>
-    </div>
-
-    <div id="contact-section" class="footer-col contact-col">
-      <div class="contact-box">
-        <form id="contactForm">
-          <h3>Drop us a message</h3>
-          <p>We'd love to hear from you!</p>
-          
-          <div class="form-group">
-            <input type="text" class="footer-input" placeholder="Name" required>
-          </div>
-          <div class="form-group">
-            <input type="email" class="footer-input" placeholder="Email" required>
-          </div>
-          <div class="form-group">
-            <textarea class="footer-input" rows="3" placeholder="Your Message" required></textarea>
-          </div>
-          <button type="submit" class="footer-btn">Send Message</button>
-        </form>
+      <div class="footer-col">
+        <h3>Community</h3>
+        <ul>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Discussions</a></li>
+          <li><a href="#">Topics</a></li>
+          <li><a href="#">User Experiences</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact-us.html">Contact</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
       </div>
     </div>
+    <div class="footer-bottom">
+      <p>© 2025 Task Hunt — All rights reserved</p>
+    </div>
+  </footer>
 
-  </div>
+  <script src="../assets/js/api.js"></script>
+  <script src="/assets/js/navbar.js"></script>
+  <script>
+    let allPosts    = [];
+    let filtered    = [];
 
-  <div class="footer-bottom">
-    <p>© 2025 Task Hunt — All rights reserved</p>
-  </div>
-</footer>
+    const feed       = document.getElementById('postsFeed');
+    const feedMeta   = document.getElementById('feedMeta');
+    const modal      = document.getElementById('postModal');
+    const openBtn    = document.getElementById('openModalBtn');
+    const closeBtn   = document.getElementById('closeModalBtn');
+    const postForm   = document.getElementById('postForm');
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter  = document.getElementById('typeFilter');
 
-<script src="../assets/js/api.js"></script>
-<script src="/assets/js/navbar.js"></script>
-<script>
-const modal   = document.getElementById("postModal");
-const openBtn = document.getElementById("openModal");
-const closeBtn = document.querySelector(".close-btn");
-const postForm = document.getElementById("postForm");
-const postsFeed = document.getElementById("postsFeed");
-
-// Modal Controls
-openBtn.onclick = () => {
-    if (!Auth.isLoggedIn()) { alert('Please log in to post.'); window.location.href = 'login.html'; return; }
-    modal.style.display = "block";
-};
-closeBtn.onclick = () => modal.style.display = "none";
-window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; }
-
-function timeAgo(dateStr) {
-    const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
-    if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
-    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-    return Math.floor(diff / 86400) + 'd ago';
-}
-
-function renderPost(post) {
-    const isHiring = post.post_type !== 'service';
-    const badgeText = isHiring ? 'Hiring' : 'Service Offer';
-    const avatarHTML = post.author_avatar
-        ? `<img src="${post.author_avatar}" style="width:35px;height:35px;border-radius:50%;object-fit:cover;">`
-        : `<div class="avatar-placeholder" style="width:35px;height:35px;"><i class="fas fa-user"></i></div>`;
-
-    const postHTML = `
-        <article class="post-card" data-author-id="${post.user_id || ''}">
-            <div class="post-header">
-                <div style="display:flex;align-items:center;gap:10px;">
-                    ${avatarHTML}
-                    <div>
-                        <strong style="font-size:14px;color:var(--c4);">${post.author_name || 'TaskHunt User'}</strong>
-                        <div style="font-size:11px;color:#888;">${timeAgo(post.created_at)}</div>
-                    </div>
-                </div>
-                <span class="badge" style="background-color:#0077B8;color:white;padding:4px 10px;border-radius:6px;">${badgeText}</span>
-            </div>
-            <h3 class="post-title">${post.title}</h3>
-            <p style="font-size:15px;color:#444;margin-bottom:15px;line-height:1.5;">${post.description}</p>
-            <span class="post-budget">Budget: $${post.budget}</span>
-            ${post.category ? `<div style="margin-top:10px;color:var(--c2);font-size:12px;font-weight:600;"><span>#${post.category}</span></div>` : ''}
-            <hr style="border:0;border-top:1px solid #eee;margin:20px 0;">
-            <div style="display:flex;gap:25px;font-size:14px;font-weight:600;color:var(--c3);">
-                <span style="cursor:pointer;"><i class="far fa-thumbs-up"></i> Interested</span>
-                <span class="msg-btn" style="cursor:pointer;"><i class="far fa-comment-dots"></i> ${isHiring ? 'Apply Now' : 'Contact Me'}</span>
-            </div>
-        </article>`;
-    postsFeed.insertAdjacentHTML('afterbegin', postHTML);
-}
-
-// Handle form submission → save to database
-postForm.onsubmit = async (e) => {
-    e.preventDefault();
-    const submitBtn = postForm.querySelector('.submit-btn');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
-
-    const postType = document.getElementById("postType").value;
-    const payload = {
-        title:       document.getElementById("postTitle").value.trim(),
-        description: document.getElementById("postContent").value.trim(),
-        budget:      Number(document.getElementById("postBudget").value) || 0,
-        category:    document.getElementById("postTags").value.trim() || 'General',
-        post_type:   postType === 'freelancer' ? 'service' : 'job'
+    openBtn.onclick = () => {
+      if (!Auth.isLoggedIn()) { window.location.href = 'login.html'; return; }
+      modal.classList.add('open');
     };
+    closeBtn.onclick = () => modal.classList.remove('open');
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
-    try {
-        const res = await fetch('/api/posts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + Auth.token() },
-            body: JSON.stringify(payload)
+    function timeAgo(dateStr) {
+      const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+      if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+      return Math.floor(diff / 86400) + 'd ago';
+    }
+
+    function renderFeed(list) {
+      feed.innerHTML = '';
+      feedMeta.textContent = list.length + ' post' + (list.length !== 1 ? 's' : '') + ' found';
+
+      if (list.length === 0) {
+        feed.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>No posts found</h3>
+            <p>Try adjusting your search or be the first to post!</p>
+          </div>`;
+        return;
+      }
+
+      list.forEach(post => {
+        const isJob      = post.post_type !== 'service';
+        const badgeClass = isJob ? 'badge-job' : 'badge-service';
+        const badgeText  = isJob ? 'Job' : 'Service';
+
+        const av = post.author_avatar
+          ? `<img src="${post.author_avatar}" class="author-avatar">`
+          : `<div class="author-avatar-init">${(post.author_name||'U').charAt(0).toUpperCase()}</div>`;
+
+        const me = Auth.user();
+        const isSelf = me && me.id === (post.user_id || post.id);
+
+        const actions = isSelf ? '' : `
+          <div class="card-actions">
+            <button class="btn-apply msg-btn" data-author-id="${post.user_id||''}">
+              <i class="fas fa-paper-plane"></i> ${isJob ? 'Apply Now' : 'Contact'}
+            </button>
+          </div>`;
+
+        const card = document.createElement('article');
+        card.className = 'post-card';
+        card.dataset.authorId = post.user_id || '';
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="author-info">
+              ${av}
+              <div>
+                <div class="author-name">${post.author_name || 'TaskHunt User'}</div>
+                <div class="post-time">${timeAgo(post.created_at)}</div>
+              </div>
+            </div>
+            <span class="post-badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <h3 class="post-title">${post.title}</h3>
+          <p class="post-desc">${post.description}</p>
+          ${post.category ? `<div class="post-tags"><span><i class="fas fa-tag" style="margin-right:4px;font-size:10px;"></i>${post.category}</span></div>` : ''}
+          <div class="card-footer">
+            <div class="post-budget">$${post.budget}<span>budget</span></div>
+            ${actions}
+          </div>`;
+        feed.appendChild(card);
+      });
+    }
+
+    function applyFilters() {
+      const search = searchInput.value.toLowerCase().trim();
+      const type   = typeFilter.value;
+      filtered = allPosts.filter(p => {
+        if (type === 'job'     && p.post_type === 'service') return false;
+        if (type === 'service' && p.post_type !== 'service') return false;
+        if (search && !p.title.toLowerCase().includes(search) &&
+            !p.description.toLowerCase().includes(search) &&
+            !(p.category||'').toLowerCase().includes(search)) return false;
+        return true;
+      });
+      renderFeed(filtered);
+    }
+
+    document.getElementById('searchBtn').onclick = applyFilters;
+    searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') applyFilters(); });
+    typeFilter.addEventListener('change', applyFilters);
+
+    // Apply / Contact click
+    feed.addEventListener('click', e => {
+      const btn = e.target.closest('.msg-btn');
+      if (!btn) return;
+      const authorId = btn.dataset.authorId || btn.closest('.post-card')?.dataset?.authorId;
+      if (!Auth.isLoggedIn()) { window.location.href = 'login.html'; return; }
+      if (!authorId) return;
+
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      btn.disabled = true;
+
+      fetch(`/api/chat/direct/with/${authorId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + Auth.token() }
+      })
+      .then(r => r.json())
+      .then(conv => { window.location.href = `chat.html?type=direct&id=${conv.id}`; })
+      .catch(() => {
+        alert('Could not open chat. Is the server running?');
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Apply Now';
+        btn.disabled = false;
+      });
+    });
+
+    // Submit new post
+    postForm.onsubmit = async e => {
+      e.preventDefault();
+      const btn = postForm.querySelector('.btn-submit-post');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing…';
+
+      const payload = {
+        title:       document.getElementById('postTitle').value.trim(),
+        description: document.getElementById('postContent').value.trim(),
+        budget:      Number(document.getElementById('postBudget').value) || 0,
+        category:    document.getElementById('postTags').value.trim() || 'General',
+        post_type:   document.getElementById('postType').value === 'freelancer' ? 'service' : 'job'
+      };
+
+      try {
+        const res  = await fetch('/api/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + Auth.token() },
+          body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to publish');
+        if (!res.ok) throw new Error(data.error || 'Failed');
 
-        // Render at top of feed
         const me = Auth.user();
-        renderPost({
-            ...payload,
-            author_name:   me ? me.name : 'You',
-            author_avatar: null,
-            created_at:    new Date().toISOString()
-        });
-        modal.style.display = "none";
+        allPosts.unshift({ ...payload, author_name: me?.name || 'You', author_avatar: null, created_at: new Date().toISOString(), user_id: me?.id });
+        applyFilters();
+        modal.classList.remove('open');
         postForm.reset();
-    } catch (err) {
+      } catch (err) {
         alert('Error: ' + err.message);
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Publish Post</span><i class="fas fa-paper-plane"></i>';
-    }
-};
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish Post';
+      }
+    };
 
-// Load existing posts from database on page load
-async function loadFeed() {
-    postsFeed.innerHTML = '<p style="text-align:center;color:#aaa;padding:2rem;">Loading...</p>';
-    try {
-        const res  = await fetch('/api/posts?limit=100&status=open');
-        const posts = await res.json();
-        postsFeed.innerHTML = '';
-        if (posts.length === 0) {
-            postsFeed.innerHTML = '<p style="text-align:center;color:#aaa;padding:2rem;">No posts yet. Be the first to post!</p>';
-            return;
-        }
-        posts.forEach(p => renderPost(p));
-    } catch (_) {
-        postsFeed.innerHTML = '<p style="text-align:center;color:#e00;padding:2rem;">Failed to load. Is the server running?</p>';
-    }
-}
-
-loadFeed();
-
-// ---(Like & Comments) ---
-
-postsFeed.addEventListener('click', (e) => {
-    
-    const likeBtn = e.target.closest('span');
-    if (likeBtn && likeBtn.innerText.includes('Interested')) {
-        const icon = likeBtn.querySelector('i');
-        
-        if (!likeBtn.classList.contains('active-like')) {
-            likeBtn.classList.add('active-like');
-            likeBtn.style.color = '#0077B8'; 
-            icon.classList.replace('far', 'fas'); // تحويل للأيقونة المليانة
-            icon.style.transform = 'scale(1.2)';
-        } 
-        else {
-            likeBtn.classList.remove('active-like');
-            likeBtn.style.color = 'var(--c3)';
-            icon.classList.replace('fas', 'far'); // رجوع للأيقونة المفرغة
-            icon.style.transform = 'scale(1)';
-        }
-        icon.style.transition = 'all 0.2s ease';
+    // Load feed
+    async function loadFeed() {
+      feed.innerHTML = '<p style="text-align:center;color:#aaa;padding:3rem;">Loading…</p>';
+      try {
+        const res = await fetch('/api/posts?limit=100&status=open');
+        allPosts   = await res.json();
+        applyFilters();
+      } catch {
+        feed.innerHTML = '<p style="text-align:center;color:#e00;padding:3rem;">Failed to load. Is the server running?</p>';
+      }
     }
 
-    const msgBtn = e.target.closest('.msg-btn');
-    if (msgBtn) {
-        const card     = msgBtn.closest('.post-card');
-        const authorId = card?.dataset?.authorId;
-        const me       = Auth.user();
-
-        if (!Auth.isLoggedIn()) { alert('Please log in to send a message.'); window.location.href = 'login.html'; return; }
-        if (!authorId || Number(authorId) === me.id) return; // can't DM yourself
-
-        msgBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening…';
-        msgBtn.style.pointerEvents = 'none';
-
-        fetch(`/api/chat/direct/with/${authorId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + Auth.token() }
-        })
-        .then(r => r.json())
-        .then(conv => { window.location.href = `chat.html?type=direct&id=${conv.id}`; })
-        .catch(() => { alert('Could not open chat. Is the server running?'); msgBtn.innerHTML = '<i class="far fa-comment-dots"></i> Apply Now'; msgBtn.style.pointerEvents = ''; });
-    }
-});
-</script>
+    loadFeed();
+  </script>
 
 </body>
 </html>
